@@ -343,31 +343,31 @@
             <h2>📍 Configurar Trajetória</h2>
             <div class="commander-section">
                 <h3>👨‍✈️ Nome do Comandante</h3>
-                <input type="text" id="commanderName" placeholder="Digite seu nome" maxlength="15" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; text-align: center; margin-bottom: 20px;">
+                <input type="text" id="commanderName" placeholder="Digite seu nome" maxlength="15" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; text-align: center; margin-bottom: 20px;" />
             </div>
             <div class="coordinate-group">
                 <div class="coordinate-input">
                     <h3>🟢 Coordenada Inicial</h3>
                     <div class="input-row">
                         <label>X:</label>
-                        <input type="number" id="startX" min="-10" max="10" value="0" placeholder="Ex: -5" />
+                        <input type="text" id="startX" value="0" placeholder="Ex: -5" />
                     </div>
                     <br />
                     <div class="input-row">
                         <label>Y:</label>
-                        <input type="number" id="startY" min="-10" max="10" value="0" placeholder="Ex: 3" />
+                        <input type="text" id="startY" value="0" placeholder="Ex: 3" />
                     </div>
                 </div>
                 <div class="coordinate-input">
                     <h3>🔴 Coordenada Final</h3>
                     <div class="input-row">
                         <label>X:</label>
-                        <input type="number" id="endX" min="-10" max="10" value="5" placeholder="Ex: 8" />
+                        <input type="text" id="endX" value="5" placeholder="Ex: 8" />
                     </div>
                     <br />
                     <div class="input-row">
                         <label>Y:</label>
-                        <input type="number" id="endY" min="-10" max="10" value="3" placeholder="Ex: -2" />
+                        <input type="text" id="endY" value="3" placeholder="Ex: -2" />
                     </div>
                 </div>
             </div>
@@ -458,6 +458,7 @@
         let middleCoords = { x: 0, y: 0 };
         let currentPhase = 'ready';
         let currentPosition = 'start';
+
         function createGrid() {
             const plane = document.getElementById('cartesianPlane');
             const existingLines = plane.querySelectorAll('.grid-line');
@@ -586,44 +587,59 @@
             sound.pause();
             sound.currentTime = 0;
         }
+        function validateCoordinate(value) {
+            if (!value) return false;
+            if (!/^[-]?\d+$/.test(value.trim())) return false; // inteiro com sinal opcional
+            const num = parseInt(value, 10);
+            return num >= -10 && num <= 10;
+        }
         function startMission() {
             enableAudio();
             const commanderName = document.getElementById('commanderName').value.trim() || 'PILOTO';
-            startCoords.x = parseInt(document.getElementById('startX').value) || 0;
-            startCoords.y = parseInt(document.getElementById('startY').value) || 0;
-            endCoords.x = parseInt(document.getElementById('endX').value) || 5;
-            endCoords.y = parseInt(document.getElementById('endY').value) || 3;
+
+            const startXVal = document.getElementById('startX').value;
+            const startYVal = document.getElementById('startY').value;
+            const endXVal = document.getElementById('endX').value;
+            const endYVal = document.getElementById('endY').value;
+
             if (
-                startCoords.x < -10 ||
-                startCoords.x > 10 ||
-                startCoords.y < -10 ||
-                startCoords.y > 10 ||
-                endCoords.x < -10 ||
-                endCoords.x > 10 ||
-                endCoords.y < -10 ||
-                endCoords.y > 10
+                !validateCoordinate(startXVal) ||
+                !validateCoordinate(startYVal) ||
+                !validateCoordinate(endXVal) ||
+                !validateCoordinate(endYVal)
             ) {
-                alert('Por favor, insira coordenadas válidas entre -10 e 10!');
+                alert('Por favor, insira coordenadas válidas entre -10 e 10, números inteiros.');
                 return;
             }
+            startCoords.x = parseInt(startXVal, 10);
+            startCoords.y = parseInt(startYVal, 10);
+            endCoords.x = parseInt(endXVal, 10);
+            endCoords.y = parseInt(endYVal, 10);
+
             document.getElementById('commanderText').textContent = commanderName.toUpperCase();
             document.getElementById('commanderLabel').textContent = commanderName.toUpperCase();
             document.getElementById('missionInfo').innerHTML = `<strong>👨‍✈️ Comandante:</strong> ${commanderName} | <strong>📍 Trajetória:</strong> (${startCoords.x}, ${startCoords.y}) → (${endCoords.x}, ${endCoords.y})`;
+
             document.getElementById('configScreen').classList.remove('active');
             document.getElementById('missionScreen').classList.add('active');
+
             createGrid();
             createAxisNumbers();
             setupTrajectory();
+
             currentPhase = 'at-start';
             currentPosition = 'start';
+
             updateControlButtons();
             updateStatus('🟢 Drone na posição inicial - Use os botões para navegar');
         }
         function updateControlButtons() {
             const prevBtn = document.getElementById('prevBtn');
             const playBtn = document.getElementById('playBtn');
+
             prevBtn.disabled = currentPosition === 'start';
             playBtn.disabled = currentPosition === 'end';
+
             if (currentPosition === 'end') {
                 playBtn.innerHTML = '⏹️';
             } else {
@@ -634,6 +650,7 @@
             if (currentPosition === 'end') return;
             const drone = document.getElementById('drone');
             playDroneSound();
+
             if (currentPosition === 'start') {
                 currentPosition = 'middle';
                 currentPhase = 'at-middle';
@@ -652,6 +669,7 @@
             if (currentPosition === 'start') return;
             const drone = document.getElementById('drone');
             playDroneSound();
+
             if (currentPosition === 'end') {
                 currentPosition = 'middle';
                 currentPhase = 'at-middle';
@@ -680,25 +698,9 @@
             currentPhase = 'ready';
             currentPosition = 'start';
         }
-        function allowNegativeInput(event) {
-            const allowedKeys = [
-                'Backspace', 'ArrowLeft', 'ArrowRight', 'Tab', 'Delete', 'Home', 'End',
-                '-', // sinal negativo
-            ];
-            if (
-                allowedKeys.includes(event.key) ||
-                (event.key >= '0' && event.key <= '9')
-            ) {
-                return;
-            } else {
-                event.preventDefault();
-            }
-        }
         function init() {
-            // Configuração inicial já está na tela
-            document.querySelectorAll('#startX, #startY, #endX, #endY').forEach(input => {
-                input.addEventListener('keydown', allowNegativeInput);
-            });
+            // Desabilita o bloqueio de teclado para permitir sinais negativos
+            // Removido o listener que bloqueava teclas, pois aceita qualquer texto
         }
         init();
     </script>
