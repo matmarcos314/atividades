@@ -301,9 +301,6 @@
             .screen {
                 padding: 20px;
             }
-            h1 {
-                font-size: 1.5rem;
-            }
             .controls {
                 left: 2%;
             }
@@ -683,8 +680,25 @@
             currentPhase = 'ready';
             currentPosition = 'start';
         }
+        function allowNegativeInput(event) {
+            const allowedKeys = [
+                'Backspace', 'ArrowLeft', 'ArrowRight', 'Tab', 'Delete', 'Home', 'End',
+                '-', // sinal negativo
+            ];
+            if (
+                allowedKeys.includes(event.key) ||
+                (event.key >= '0' && event.key <= '9')
+            ) {
+                return;
+            } else {
+                event.preventDefault();
+            }
+        }
         function init() {
             // Configuração inicial já está na tela
+            document.querySelectorAll('#startX, #startY, #endX, #endY').forEach(input => {
+                input.addEventListener('keydown', allowNegativeInput);
+            });
         }
         init();
     </script>
