@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<title>Cortador de Áudio — Fundo Windows Faixas</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', sans-serif;
+        background:
+            repeating-linear-gradient(
+                120deg,
+                #3366CC 0px, #3366CC 60px,
+                #00CFFF 60px, #00CFFF 120px,
+                #63FFCA 120px, #63FFCA 180px,
+                #FFCF00 180px, #FFCF00 240px,
+                #FF8A00 240px, #FF8A00 300px,
+                #FF4A4A 300px, #FF4A4A 360px
+            ),
+            #fafafa;
+        min-height: 100vh;
+        width: 100vw;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .container {
+        background: rgba(255,255,255,0.90); /* leve transparência para as faixas aparecerem */
+        box-shadow: 0 8px 24px rgba(0,0,0,0.09);
+        border-radius: 18px;
+        padding: 56px 52px;
+        width: 100%;
+        max-width: 520px;
+        text-align: center;
+        z-index: 2;
+        position: relative;
+        backdrop-filter: blur(0.5px);
+    }
+
+    h2 {
+        font-weight: 600;
+        margin-bottom: 35px;
+        font-size: 2rem;
+        color: #34495e;
+    }
+
+    input[type="file"] {
+        border: 2px dashed #bdc3c7;
+        padding: 15px;
+        width: 100%;
+        border-radius: 10px;
+        background: #ecf0f1;
+        cursor: pointer;
+        font-size: 1rem;
+        color: #7f8c8d;
+    }
+    input[type="file"]:hover {
+        border-color: #3498db;
+        background-color: #d6eaf8;
+        color: #2980b9;
+    }
+    .input-group { text-align: left; margin-top: 30px; }
+    label { display: block; font-weight: 600; margin-bottom: 8px; color: #34495e; font-size: 1rem; }
+    input[type="number"] {
+        width: 100%;
+        padding: 11px 15px;
+        font-size: 1rem;
+        border-radius: 8px;
+        border: 2px solid #bdc3c7;
+        transition: border-color 0.3s;
+        color: #2c3e50;
+    }
+    input[type="number"]:focus { border-color: #3498db; box-shadow: 0 0 5px rgba(52,152,219,0.5); }
+    button {
+        margin-top: 40px;
+        padding: 15px 50px;
+        background: linear-gradient(90deg, #3366CC 0%, #FF8A00 100%);
+        color: #fff;
+        border: none;
+        border-radius: 30px;
+        font-size: 1.13rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 6px 18px rgba(41,128,185,0.19);
+        transition: background 0.3s, box-shadow 0.3s;
+        width: 100%;
+    }
+    button:hover {
+        background: linear-gradient(90deg, #00CFFF 0%, #FF4A4A 100%);
+        box-shadow: 0 11px 32px rgba(41,128,185,0.24);
+    }
+    #playerContainer {
+        margin-top: 38px;
+        background: #f7f9fc;
+        border-radius: 15px;
+        box-shadow: 0 8px 21px rgba(0,0,0,0.065);
+        padding: 30px;
+    }
+    audio { width: 100%; border-radius: 7px; }
+    a.download-link {
+        display: inline-block; margin-top: 18px; color: #3366CC;
+        font-weight: 600; text-decoration: none; font-size: 1.04rem;
+        transition: color 0.3s;
+    }
+    a.download-link:hover { color: #FF8A00; text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="container">
+    <h2>Cortar Áudio em MP3</h2>
+    <input type="file" id="audioFile" accept="audio/*" />
+
+    <div class="input-group">
+        <label for="startTime">Início (segundos):</label>
+        <input type="number" id="startTime" value="0" min="0" step="0.1" />
+    </div>
+    <div class="input-group">
+        <label for="endTime">Fim (segundos):</label>
+        <input type="number" id="endTime" value="5" min="0" step="0.1" />
+    </div>
+    <button onclick="trimAudio()">Cortar e Exportar MP3</button>
+    <div id="playerContainer"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.0/lame.min.js"></script>
+<script>
+    async function trimAudio() {
+        const fileInput = document.getElementById('audioFile');
+        if (!fileInput.files.length) { alert('Por favor, selecione um arquivo de áudio.'); return; }
+
+        const startTime = parseFloat(document.getElementById('startTime').value);
+        const endTime = parseFloat(document.getElementById('endTime').value);
+        if (endTime <= startTime) { alert('O tempo de fim deve ser maior que o tempo de início.'); return; }
+
+        const audioFile = fileInput.files[0];
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const arrayBuffer = await audioFile.arrayBuffer();
+        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+        const sampleRate = 44100;
+        const numberOfChannels = 1;
+        const startSample = Math.floor(startTime * audioBuffer.sampleRate);
+        const endSample = Math.floor(endTime * audioBuffer.sampleRate);
+        const length = endSample - startSample;
+
+        const channelData = audioBuffer.getChannelData(0).subarray(startSample, endSample);
+        const samples = new Int16Array(length);
+        for (let i = 0; i < length; i++) {
+            let s = channelData[i];
+            s = Math.max(-1, Math.min(1, s));
+            samples[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+        }
+
+        const mp3encoder = new lamejs.Mp3Encoder(numberOfChannels, sampleRate, 128);
+        const sampleBlockSize = 1152;
+        let mp3Data = [];
+
+        for (let i = 0; i < samples.length; i += sampleBlockSize) {
+            let sampleChunk = samples.subarray(i, i + sampleBlockSize);
+            let mp3buf = mp3encoder.encodeBuffer(sampleChunk);
+            if (mp3buf.length > 0) { mp3Data.push(mp3buf); }
+        }
+        const mp3buf = mp3encoder.flush();
+        if (mp3buf.length > 0) { mp3Data.push(mp3buf); }
+
+        const blob = new Blob(mp3Data, { type: 'audio/mp3' });
+        const url = URL.createObjectURL(blob);
+
+        const playerContainer = document.getElementById('playerContainer');
+        playerContainer.innerHTML = `
+            <audio controls src="${url}"></audio>
+            <br>
+            <a href="${url}" class="download-link" download="audio-cortado.mp3">Download MP3</a>
+        `;
+    }
+</script>
+</body>
+</html>

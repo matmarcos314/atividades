@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Slides - Função do Segundo Grau</title>
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+    background: linear-gradient(120deg, #dbe6fc 0%, #f3fcf7 100%);
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+  }
+  .slides-wrap {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0; left: 0;
+  }
+  .slide {
+    background: #fff;
+    box-shadow: 0 8px 28px rgba(38,118,230,0.16), 0 2px 18px rgba(60,90,170,0.09);
+    border-radius: 18px;
+    width: 700px;
+    max-width: 90vw;
+    min-height: 320px;
+    padding: 42px 40px 23px 40px;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: box-shadow 0.5s, transform 0.5s;
+    animation: fadein .7s;
+  }
+  @keyframes fadein {
+    0% { opacity: 0; transform: scale(0.95);}
+    80% { opacity: 1; transform: scale(1.03);}
+    100% { opacity: 1; transform: scale(1);}
+  }
+  .slide.active {
+    display: flex;
+  }
+  h2 {
+    font-size: 2.2em;
+    text-align: center;
+    margin-bottom: 19px;
+    margin-top: 0;
+    font-weight: bold;
+    letter-spacing: -1.5px;
+    color: #2676e6;
+    text-shadow: 2px 2px 8px #e3eafd;
+  }
+  p {
+    font-size: 1.2em;
+    margin: 7px 0 15px 0;
+    text-align: center;
+    color: #222a48;
+  }
+  ul {
+    font-size: 1.13em;
+    margin: 9px 0 0 0;
+    padding-left: 24px;
+    text-align: left;
+  }
+  ul li {
+    margin-bottom: 7px;
+    color: #2e355c;
+    line-height: 1.6em;
+  }
+  .highlight {
+    color: #2676e6;
+    font-weight: bold;
+    background: linear-gradient(90deg,#deecff 0,#f5faff 100%);
+    border-radius: 7px;
+    box-shadow: 0 0 8px #2676e633;
+    padding: 2px 7px;
+    margin: 0 2px;
+    display: inline-block;
+  }
+  .keyword {
+    color: #3ba264;
+    font-weight: bold;
+    background: linear-gradient(90deg,#e4f9f1 0,#e6f5fd 100%);
+    border-radius: 7px;
+    box-shadow: 0 0 8px #3ba26422;
+    padding: 2px 8px;
+    margin: 0 2px;
+    display: inline-block;
+  }
+  .danger {
+    color: #f25538;
+    font-weight: bold;
+    background: linear-gradient(90deg,#fde6e6 0,#fff3ea 100%);
+    border-radius: 7px;
+    box-shadow: 0 0 8px #f2553820;
+    padding: 2px 7px;
+    margin: 0 2px;
+    display:inline-block;
+  }
+  .nav-buttons {
+    position: fixed;
+    bottom: 30px;
+    left: 0; right: 0;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99;
+  }
+  .nav-buttons button {
+    background: linear-gradient(90deg,#2676e6 50%,#3cd2ae 100%);
+    color: #fff;
+    border: none;
+    padding: 16px 32px;
+    margin: 0 17px;
+    border-radius: 10px;
+    font-size: 1.22em;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 3px 12px #2676e607;
+    transition: background 0.2s, transform 0.13s, box-shadow 0.2s;
+    outline: none;
+  }
+  .nav-buttons button:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 6px #2676e637;
+  }
+  .nav-buttons button:disabled {
+    background: #d8eefc;
+    cursor: default;
+    color: #aaa;
+  }
+  @media (max-width: 900px) {
+    .slide {
+      width: 98vw;
+      padding: 16vw 5vw 14vw 5vw;
+    }
+    .nav-buttons button {
+      padding: 11px 10vw;
+      font-size: 1em;
+      margin: 0 2vw;
+    }
+    h2, p, ul {font-size: 1em;}
+  }
+</style>
+</head>
+<body>
+<div class="slides-wrap" id="slides-container">
+  <!-- Slide 1: Pergunta -->
+  <div class="slide active" id="slide-1">
+    <h2>O que é uma função do segundo grau?</h2>
+  </div>
+  <!-- Slide 2: Explicação -->
+  <div class="slide" id="slide-2">
+    <h2>O que é uma função do segundo grau?</h2>
+    <p>
+      Uma <span class="highlight">função do segundo grau</span> é uma expressão matemática escrita na forma:
+    </p>
+    <p style="font-size:1.6em;margin-bottom:0.3em;">
+      <span class="keyword">f(x) = ax² + bx + c</span>
+    </p>
+    <ul>
+      <li>
+        <span class="keyword">a</span>, <span class="keyword">b</span> e <span class="keyword">c</span> são números reais
+      </li>
+      <li><span class="keyword">a ≠ 0</span></li>
+    </ul>
+    <p>
+      O gráfico dessa função é uma <span class="danger">parábola</span>, que pode se abrir para cima ou para baixo.
+    </p>
+  </div>
+  <!-- Slide 3: Pergunta -->
+  <div class="slide" id="slide-3">
+    <h2>Exemplo do dia a dia?</h2>
+  </div>
+  <!-- Slide 4: Explicação -->
+  <div class="slide" id="slide-4">
+    <h2>Exemplo do dia a dia?</h2>
+    <p>Quando jogamos uma bola para cima ou para frente, sua trajetória pode ser descrita por uma função do segundo grau.</p>
+    <ul>
+      <li><span class="highlight">Eixo x:</span> tempo ou distância</li>
+      <li><span class="highlight">Eixo y:</span> altura</li>
+    </ul>
+    <p>
+      A curva indica que a bola sobe, chega ao <span class="danger">ponto mais alto</span> (<span class="keyword">vértice</span>) e depois desce até tocar o chão.
+    </p>
+  </div>
+  <!-- Slide 5: Pergunta -->
+  <div class="slide" id="slide-5">
+    <h2>Pontos importantes no gráfico?</h2>
+  </div>
+  <!-- Slide 6: Explicação -->
+  <div class="slide" id="slide-6">
+    <h2>Pontos importantes no gráfico?</h2>
+    <ul>
+      <li>
+        <span class="danger">Raízes (zeros):</span>
+        pontos onde a bola toca o chão (início e fim)
+      </li>
+      <li>
+        <span class="keyword">Vértice:</span>
+        ponto mais alto da trajetória
+      </li>
+      <li>
+        <span class="keyword">Interseção y:</span>
+        altura inicial no lançamento
+      </li>
+    </ul>
+  </div>
+  <!-- Slide 7: Pergunta -->
+  <div class="slide" id="slide-7">
+    <h2>Outro exemplo?</h2>
+  </div>
+  <!-- Slide 8: Explicação -->
+  <div class="slide" id="slide-8">
+    <h2>Outro exemplo?</h2>
+    <p>Algumas rampas de skate têm formato de <span class="danger">parábola</span>.</p>
+    <p>Assim como na bola, existe um <span class="keyword">ponto mais alto</span> (<span class="keyword">vértice</span>) e dois pontos baixos (<span class="danger">raízes</span>).</p>
+  </div>
+  <!-- Slide 9: Pergunta -->
+  <div class="slide" id="slide-9">
+    <h2>Diferença entre equação e função do segundo grau?</h2>
+  </div>
+  <!-- Slide 10: Explicação -->
+  <div class="slide" id="slide-10">
+    <h2>Diferença entre equação e função do segundo grau</h2>
+    <p><span class="danger">Equação do segundo grau:</span></p>
+    <p style="font-size:1.25em;">
+      <span class="keyword">ax² + bx + c = 0</span>
+    </p>
+    <p>Serve para encontrar os valores de <span class="highlight">x</span> que tornam o resultado igual a <span class="highlight">zero</span> (as <span class="danger">raízes</span>).</p>
+    <p><span class="highlight">Função do segundo grau:</span></p>
+    <p>Mostra a relação entre <span class="highlight">x</span> e <span class="highlight">y</span>, representada graficamente como uma <span class="danger">parábola</span>.</p>
+  </div>
+  <!-- Slide 11: Pergunta -->
+  <div class="slide" id="slide-11">
+    <h2>Explorando com simuladores</h2>
+  </div>
+  <!-- Slide 12: Explicação -->
+  <div class="slide" id="slide-12">
+    <h2>Explorando com simuladores</h2>
+    <ul>
+      <li>
+        <span class="keyword">a:</span> indica se a parábola abre para cima ou para baixo e o quanto se fecha
+      </li>
+      <li>
+        <span class="keyword">b:</span> altera a inclinação inicial da curva
+      </li>
+      <li>
+        <span class="keyword">c:</span> é o valor inicial de y (altura inicial)
+      </li>
+    </ul>
+  </div>
+  <!-- Slide 13: Pergunta -->
+  <div class="slide" id="slide-13">
+    <h2>Sugestão para sala de aula</h2>
+  </div>
+  <!-- Slide 14: Explicação -->
+  <div class="slide" id="slide-14">
+    <h2>Sugestão para sala de aula</h2>
+    <ul>
+      <li>Divida cada parte do texto entre os alunos para leitura em voz alta</li>
+      <li>Utilize um simulador online para mostrar o lançamento da bola e uma rampa de skate</li>
+      <li>Peça para marcar no gráfico as <span class="danger">raízes</span>, o <span class="keyword">vértice</span> e o <span class="keyword">ponto inicial</span></li>
+    </ul>
+  </div>
+</div>
+<div class="nav-buttons">
+  <button id="prevBtn" disabled>◀ Anterior</button>
+  <button id="nextBtn">Próximo ▶</button>
+</div>
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let current = 0;
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
+      if (i === index) {
+        slide.style.transform = 'scale(1.04)';
+        setTimeout(() => {slide.style.transform = 'scale(1)'}, 350);
+      }
+    });
+    document.getElementById('prevBtn').disabled = index === 0;
+    document.getElementById('nextBtn').disabled = index === slides.length - 1;
+  }
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if (current > 0) {
+      current--;
+      showSlide(current);
+    }
+  });
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if (current < slides.length - 1) {
+      current++;
+      showSlide(current);
+    }
+  });
+  // Navegação com teclado: direita/espaco para próximo, esquerda para anterior
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+      if (current < slides.length - 1) {
+        current++;
+        showSlide(current);
+      }
+    } else if (e.key === 'ArrowLeft') {
+      if (current > 0) {
+        current--;
+        showSlide(current);
+      }
+    }
+  });
+  showSlide(current);
+  // Função para entrar em tela cheia automaticamente
+  document.addEventListener('DOMContentLoaded', () => {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else if (document.documentElement.webkitRequestFullscreen) { // Safari
+      document.documentElement.webkitRequestFullscreen();
+    } else if (document.documentElement.msRequestFullscreen) { // IE11
+      document.documentElement.msRequestFullscreen();
+    }
+  });
+  // API Wake Lock para evitar modo de espera
+  let wakeLock = null;
+  async function requestWakeLock() {
+    try {
+      if ('wakeLock' in navigator) {
+        wakeLock = await navigator.wakeLock.request('screen');
+        wakeLock.addEventListener('release', () => {
+          console.log('Wake Lock foi liberado');
+        });
+        console.log('Wake Lock ativado');
+      } else {
+        console.log('Wake Lock não suportado pelo navegador');
+      }
+    } catch (err) {
+      console.error('Erro ao ativar Wake Lock:', err);
+    }
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (wakeLock !== null && document.visibilityState === 'visible') {
+      requestWakeLock();
+    }
+  });
+  // Solicita Wake Lock após o carregamento
+  document.addEventListener('DOMContentLoaded', () => {
+    requestWakeLock();
+  });
+</script>
+</body>
+</html>

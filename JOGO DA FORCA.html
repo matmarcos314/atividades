@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <title>Jogo da Forca com 100 Perguntas</title>
+  <style>
+    body {
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #f7fafc 0%, #e2e8f0 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      position: relative;
+    }
+    .btn-voltar {
+      position: fixed;
+      top: 2%;
+      left: 2%;
+      background: #3182ce;
+      color: #fff;
+      font-size: 1.25em;
+      font-weight: 700;
+      padding: 12px 32px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 6px 20px 0 #4698e247;
+      z-index: 1500;
+      text-decoration: none;
+      transition: background 0.2s, box-shadow 0.25s, transform 0.15s;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.13);
+    }
+    .btn-voltar:hover, .btn-voltar:focus {
+      background: #2461aa;
+      box-shadow: 0 12px 34px #3182ce40;
+      transform: translateY(-2px);
+      text-decoration: none;
+      outline: none;
+    }
+    .btn-voltar svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+      transform: translateX(-2px);
+    }
+    /* Imagens à esquerda, centralizadas na vertical */
+    #imagensLateral {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      z-index: 1000;
+      user-select: none;
+      pointer-events: none;
+      align-items: flex-start;
+      padding-left: 1vw;
+    }
+    #imagensLateral img {
+      width: 160px;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.27);
+      display: block;
+    }
+    #imagensLateral img:hover {
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    }
+    .painel-opcoes {
+      margin-top: 38px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      max-width: 900px;
+      justify-content: center;
+      background: #fff;
+      padding: 24px 15px;
+      border-radius: 20px;
+      box-shadow: 0 3px 18px #90cdf44b;
+    }
+    .opcao-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: linear-gradient(120deg, #90cdf4 60%, #5b7fa6 100%);
+      color: #fff;
+      font-size: 1.1em;
+      font-weight: bold;
+      text-align: center;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.12s;
+      box-shadow: 0 1px 6px #aad2fc2e;
+      user-select: none;
+      outline: none;
+    }
+    .opcao-btn:active { transform: scale(0.97);}
+    .opcao-btn.usada, .opcao-btn:disabled {
+      background: #e7e7e7;
+      color: #c0c0c0;
+      cursor: not-allowed;
+      text-decoration: line-through;
+      font-weight: 500;
+      pointer-events: none;
+      border: 1px solid #d5dbe6;
+    }
+    .cabecalho-entrada {
+      font-size: 2.6em;
+      font-weight: 800;
+      color: #3875cd;
+      background: linear-gradient(90deg,#6bb9f7 35%, #91d6f3 85%);
+      border-radius: 12px;
+      margin-top: 32px;
+      margin-bottom: 12px;
+      padding: 18px 25px 12px 25px;
+      text-align: center;
+      box-shadow: 0 2px 12px #9fdaf622;
+      user-select:none;
+    }
+    #btnZerar {
+      margin: 22px auto 0 auto;
+      display: block;
+      font-size: 1.03em;
+      background: #e5e5e5;
+      color: #4f4f4f;
+      border: none;
+      border-radius: 7px;
+      padding: 7px 22px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #dbeffe1a;
+    }
+    #btnZerar:hover { background: #bad6ea; color: #274974; }
+    /* Centralização vertical só QUANDO a tela da forca está ativa e agora deslocada 10% para a direita */
+    #telaForca .forca-layout {
+      position: fixed;
+      right: 10%;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: flex-start;
+      width: auto;
+      gap: 48px;
+      max-width: 1250px;
+    }
+    /* Layout normal (tela de entrada) continua fluindo normal */
+    .forca-layout {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: flex-start;
+      width: auto;
+      gap: 48px;
+      max-width: 1250px;
+    }
+    .container {
+      background: #ffffffef;
+      padding: 40px 32px 26px 32px;
+      border-radius: 24px;
+      min-width: 350px;
+      max-width: 670px;
+      width: 670px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      margin: 0 0 32px 0;
+      position: relative;
+      z-index: 2;
+      border: 2px solid #e2ecf9;
+      box-shadow: 0 11px 32px 0 #86b3e422;
+      box-sizing: border-box;
+    }
+    .container h2 {
+      width: 110%;
+      box-sizing: border-box;
+      display: block;
+      margin: 0 auto 12px auto;
+      text-align: center;
+    }
+    .container:hover {
+      box-shadow: 0 15px 44px 0 #7ebee7b3, 0 2px 9px #55a3de2a;
+    }
+    .config-tempo {
+      background: #f0f5fa;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px #b3c1d713;
+      padding: 10px 24px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 1.13em;
+      width: 100%;
+      justify-content: center;
+      border: 1.5px solid #d7e9fc;
+    }
+    .config-tempo input, .config-tempo button {
+      font-size: 1em;
+      padding: 8px 13px;
+      border-radius: 8px;
+      border: 1px solid #bdd0ee;
+      margin-left: 2px;
+      background: #fff;
+    }
+    .config-tempo button {
+      background: #3182ce;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      margin-left: 7px;
+    }
+    .config-tempo button:hover {
+      background: #1a4370;
+      color: #fff;
+    }
+    .box-centro {
+      border-top:1px solid #e2e8f0;
+      border-bottom:1px solid #e2e8f0;
+      padding:18px 0 12px 0;
+      margin:6px 0;
+      width: 99%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 11px;
+      min-height: 190px;
+      background: linear-gradient(96deg, #e9f6ff 80%, #d3ecfa 120%);
+      border-radius: 14px;
+      box-shadow: 0 3px 12px #7dc3fa22;
+    }
+    .palavra {
+      font-size: 2em;
+      letter-spacing: 0.2em;
+      color: #224b83;
+      text-align: center;
+      font-weight: 900;
+      user-select: none;
+      word-break: break-all;
+      background: #f5fafd;
+      border-radius: 10px;
+      box-shadow: 0 1px 6px #7dc2fa33;
+      padding: 9px 10px 5px 10px;
+      margin-bottom: 2px;
+      margin-top: 0;
+      min-width: 89%;
+      max-width: 100%;
+    }
+    .forca {
+      font-size: 1.08em;
+      margin-bottom: 2px;
+      color: #809db8;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      user-select: none;
+    }
+    .dica {
+      background: linear-gradient(90deg,#edf7fb 80%, #f7fbff 100%);
+      color: #1562ce;
+      text-align: center;
+      font-size: 1.09em;
+      font-weight: bold;
+      border-radius: 8px;
+      border: 1.1px solid #c4e3fa;
+      margin-bottom: 2px;
+      padding: 7px 12px;
+      min-height: 29px;
+      width: 81%;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 1px 3px #5ba8ed18;
+    }
+    #tempoRestanteDiv {
+      position: fixed;
+      top: 2%;
+      right: 2%;
+      z-index: 2000;
+      color: #e17463;
+      background: #fff6f3;
+      border-radius: 8px;
+      padding: 10px 32px;
+      box-shadow: 0 3px 10px #e1746321;
+      font-size: 1.23em;
+      font-weight: bold;
+      min-width: 200px;
+      text-align: center;
+      user-select: none;
+      border: 1.7px solid #fbcaca;
+      transition: background .18s;
+    }
+    .letras {
+      width: 95%;
+      background: linear-gradient(99deg, #eaf5ff 60%, #eeeffc 120%);
+      border-radius: 12px;
+      box-shadow: 0 1px 10px #72aad921;
+      padding: 8px 7px 6px 7px;
+      margin: 5px auto 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px 6px;
+      justify-content: center;
+      min-height: 54px;
+      max-width: 97vw;
+    }
+    .letra {
+      width: 38px;
+      height: 38px;
+      margin: 1px 2px 2px 2px;
+      background: linear-gradient(110deg, #f7fafc 65%, #e2e8f0 120%);
+      border-radius: 6px;
+      border: 1.6px solid #83bae8;
+      box-shadow: 0 1px 11px #a2cdf618;
+      font-size: 1.11em;
+      font-weight: 800;
+      color: #156fc2;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      cursor: pointer;
+      transition: filter 0.16s, background 0.18s;
+      outline: none;
+      position: relative;
+    }
+    .letra:hover, .letra:focus {
+      filter: brightness(1.12);
+      background: #ddeffc;
+      border-color: #3086c6;
+    }
+    .letra.usada {
+      background: #e2e8f0;
+      color: #b9b9b9;
+      cursor: default;
+      text-decoration: line-through;
+      border-color: #e0e9f2;
+      box-shadow: 0 1px 3px #b0bede16;
+    }
+    .mensagem {
+      color: #388870;
+      font-size: 1.1em;
+      margin: 14px 0 7px 0;
+      text-align: center;
+      font-weight: 700;
+      user-select: none;
+    }
+    .reiniciar {
+      margin-top: 10px;
+      padding: 10px 29px;
+      background: #cce8f5;
+      border: none;
+      color: #4775a5;
+      border-radius: 9px;
+      font-size: 1.04em;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #ceecfa2a;
+    }
+    .reiniciar:hover { background: #b2d1ec; }
+    .forca-canvas-box {
+      min-width: 260px;
+      max-width: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 2% 0 0;
+      height: 400px;
+      position: relative;
+      right: 0;
+    }
+    .forca-canvas-box canvas {
+      width: 260px;
+      height: 340px;
+      background: #e4edf7;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #b6c7e2;
+      display: block;
+    }
+    @media (max-width:950px) {
+      #telaForca .forca-layout { position: static; transform: none; right: auto; top: auto; flex-direction: column; gap: 24px; align-items: center;}
+      .container { margin:22px 2vw 10px 2vw; max-width: 97vw; width: 99vw;}
+      .forca-canvas-box { margin: 16px 0 0 0;}
+      #tempoRestanteDiv { position: static; width: 100%; margin: 0 0 8px 0; min-width: unset;}
+    }
+    @media (max-width: 600px) {
+      .container { min-width: 95vw; padding: 10px 2vw 20px 2vw; }
+      .letras { max-width: 97vw; }
+      .palavra { font-size: 1.16em; }
+      .forca-canvas-box canvas { width: 98vw; height: 50vw; min-width:160px; }
+      .forca-canvas-box { margin-right: 0; }
+      #imagensLateral { left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <a href="tela.html" class="btn-voltar" aria-label="Voltar para tela principal">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+    Voltar
+  </a>
+  <div id="imagensLateral">
+    <img src="03.png" alt="Logo do curso à esquerda" />
+    <img src="logba.png" alt="Logo BA da comemoração" />
+    <img src="nte11.png" alt="Imagem NT11 relacionada ao evento" />
+  </div>
+  <div id="telaEntrada">
+    <div class="cabecalho-entrada"><b>Selecione uma Forca</b>
+      <span style="font-size:0.68em;color:#3875cd;font-weight:600;display:block;">Dia do Estudante</span>
+    </div>
+    <div class="painel-opcoes" id="painelOpcoes"></div>
+    <button id="btnZerar" onclick="zerarUsados()" title="Libera todas escolhas"><b>Liberar todas as escolhas</b></button>
+  </div>
+  <div id="telaForca" style="display:none;">
+    <div class="forca-layout">
+      <div class="container">
+        <h2>Jogo da Forca</h2>
+        <div class="config-tempo">
+          <label for="inputTempo"><b>Tempo:</b></label>
+          <input type="number" id="inputTempo" min="10" max="300" value="60" style="width:90px;" />
+          <button type="button" onclick="definirTempo()" id="btnTempo"><b>Configurar Tempo</b></button>
+        </div>
+        <div class="box-centro">
+          <div id="tempoRestanteDiv"></div>
+          <div class="forca" id="forca"></div>
+          <div class="dica" id="dica"></div>
+          <div class="palavra" id="palavra"></div>
+        </div>
+        <div class="box-acao">
+          <div class="letras" id="letras"></div>
+          <div class="mensagem" id="mensagem"></div>
+          <button class="reiniciar" style="margin-top:7px;" id="btnVoltar" onclick="voltarTelaEntrada()"><b>Voltar</b></button>
+        </div>
+      </div>
+      <div class="forca-canvas-box">
+        <canvas id="forcaCanvas" width="260" height="340"></canvas>
+      </div>
+    </div>
+  </div>
+<script>
+const perguntas = [
+  { palavra: "SOL", dica: "Ilumina e aquece a Terra.", nivel: "Fácil" },
+  { palavra: "LUA", dica: "Satélite natural da Terra.", nivel: "Fácil" },
+  { palavra: "FLOR", dica: "Nascem nos jardins.", nivel: "Fácil" },
+  { palavra: "MEL", dica: "Produzido por abelhas.", nivel: "Fácil" },
+  { palavra: "CEREJA", dica: "Fruta vermelha e redonda.", nivel: "Fácil" },
+  { palavra: "PRISCO", dica: "Colégio.", nivel: "Fácil" },
+  { palavra: "PATO", dica: "Ave que pode nadar.", nivel: "Fácil" },
+  { palavra: "PEIXE", dica: "Vive na água.", nivel: "Fácil" },
+  { palavra: "KIWI", dica: "Fruta verde com casca marrom.", nivel: "Fácil" },
+  { palavra: "RATO", dica: "Roedor pequeno.", nivel: "Fácil" },
+  { palavra: "VIDRO", dica: "Material transparente de janelas.", nivel: "Fácil" },
+  { palavra: "SAPO", dica: "Amigo do brejo.", nivel: "Fácil" },
+  { palavra: "MESA", dica: "Móvel para refeições.", nivel: "Fácil" },
+  { palavra: "CAMA", dica: "Onde dormimos.", nivel: "Fácil" },
+  { palavra: "TESOURA", dica: "Serve para cortar.", nivel: "Fácil" },
+  { palavra: "BOLO", dica: "Alimento de farinha.", nivel: "Fácil" },
+  { palavra: "FOGO", dica: "Serve para cozinhar.", nivel: "Fácil" },
+  { palavra: "CINEMA", dica: "Onde se assiste filmes.", nivel: "Fácil" },
+  { palavra: "ROSA", dica: "Nome de flor e de cor.", nivel: "Fácil" },
+  { palavra: "CAMISA", dica: "Roupa para o corpo.", nivel: "Fácil" },
+  { palavra: "TERRA", dica: "Planeta dos humanos.", nivel: "Fácil" },
+  { palavra: "CEBOLA", dica: "Faz chorar quando cortada.", nivel: "Fácil" },
+  { palavra: "CARRO", dica: "Transporte.", nivel: "Fácil" },
+  { palavra: "OLHO", dica: "Serve para enxergar.", nivel: "Fácil" },
+  { palavra: "PIANO", dica: "Instrumento de teclas.", nivel: "Fácil" },
+  { palavra: "BANANA", dica: "Fruta amarela curva.", nivel: "Fácil" },
+  { palavra: "ESTUDANTE", dica: "11 de agosto.", nivel: "Fácil" },
+  { palavra: "RIO", dica: "Água que corre.", nivel: "Fácil" },
+  { palavra: "AZUL", dica: "Cor do céu limpo.", nivel: "Fácil" },
+  { palavra: "GRAMA", dica: "Cobre os jardins.", nivel: "Fácil" },
+  { palavra: "CANETA", dica: "Escreve no papel.", nivel: "Fácil" },
+  { palavra: "GATO", dica: "Animal que mia.", nivel: "Fácil" },
+  { palavra: "PIPOCA", dica: "Milho que estoura na panela.", nivel: "Fácil" },
+  { palavra: "PINGUIM", dica: "Ave que não voa, adora frio.", nivel: "Fácil" },
+
+  { palavra: "ESFERA", dica: "Forma geométrica redonda.", nivel: "Médio" },
+  { palavra: "PLANETA", dica: "Corpo celeste que gira ao redor do Sol.", nivel: "Médio" },
+  { palavra: "BUSSOLA", dica: "Indica direção.", nivel: "Médio" },
+  { palavra: "CARNAVAL", dica: "Festa popular cheia de fantasias.", nivel: "Médio" },
+  { palavra: "AMOR", dica: "SENTIMENTO.", nivel: "Médio" },
+  { palavra: "MAIS-E-MENOS", dica: "Operações de matemática.", nivel: "Médio" },
+  { palavra: "OCEANO", dica: "Grande extensão de água salgada.", nivel: "Médio" },
+  { palavra: "JORNAL", dica: "Notícias impressas diariamente.", nivel: "Médio" },
+  { palavra: "ESCARAVELHO", dica: "Inseto símbolo do Antigo Egito.", nivel: "Médio" },
+  { palavra: "ENGENHEIRO", dica: "Profissional que constrói.", nivel: "Médio" },
+  { palavra: "CARBONO", dica: "Datar fóssil.", nivel: "Médio" },
+  { palavra: "RAIO", dica: "Luz do céu durante tempestades.", nivel: "Médio" },
+  { palavra: "FOLCLORE", dica: "Tradições de um povo.", nivel: "Médio" },
+  { palavra: "BRASILEIRO", dica: "Nacionalidade do brasil.", nivel: "Médio" },
+  { palavra: "GEOGRAFIA", dica: "Disciplina escolar sobre a terra .", nivel: "Médio" },
+  { palavra: "FERROVIA", dica: "Trilho de trem.", nivel: "Médio" },
+  { palavra: "BICICLETA", dica: "Veículo de duas rodas.", nivel: "Médio" },
+  { palavra: "GIRASSOL", dica: "Planta amarela que segue o Sol.", nivel: "Médio" },
+  { palavra: "PALEONTOLOGIA", dica: "Estudo dos fósseis.", nivel: "Médio" },
+  { palavra: "CIRCUITO", dica: "Caminho fechado para eletricidade.", nivel: "Médio" },
+  { palavra: "ALMOFADA", dica: "Objeto macio no sofá.", nivel: "Médio" },
+  { palavra: "TURISTA", dica: "Quem viaja para conhecer.", nivel: "Médio" },
+  { palavra: "RECREIO", dica: "Pausa das aulas.", nivel: "Médio" },
+  { palavra: "JANELA", dica: "Abertura para luz e ar.", nivel: "Médio" },
+  { palavra: "BORBOLETA", dica: "Inseto de belas asas.", nivel: "Médio" },
+  { palavra: "VERDE", dica: "Cor que controla o trânsito.", nivel: "Médio" },
+  { palavra: "OLHO", dica: "Ver perto e longe.", nivel: "Médio" },
+  { palavra: "PORCELANA", dica: "Material de pratos e xícaras.", nivel: "Médio" },
+  { palavra: "ASTRONAUTA", dica: "Viaja pelo espaço.", nivel: "Médio" },
+  { palavra: "VERMELHO", dica: "Cor associada a sangue e fogo.", nivel: "Médio" },
+  { palavra: "PERGAMINHO", dica: "Antigo papel para escrita.", nivel: "Médio" },
+  { palavra: "ESCONDIDO", dica: "Ninguém vê.", nivel: "Médio" },
+  { palavra: "NAVEGAR", dica: "Viajar pelo mar ou internet.", nivel: "Médio" },
+
+  { palavra: "PARALELEPIPEDO", dica: "Bloco de pedra nas ruas antigas.", nivel: "Difícil" },
+  { palavra: "QUIZOMBO", dica: "Antigo quilombo de Angola.", nivel: "Difícil" },
+  { palavra: "AVESTRUZ", dica: "Ave incapaz de voar, mas corre muito.", nivel: "Difícil" },
+  { palavra: "EPICENTRO", dica: "Centro de um terremoto.", nivel: "Difícil" },
+  { palavra: "PASTOR", dica: "Religião.", nivel: "Difícil" },
+  { palavra: "HEXADECIMAL", dica: "Base numérica usada na informática.", nivel: "Difícil" },
+  { palavra: "ELETROMAGNETISMO", dica: "Interação de elétrons com campos magnéticos.", nivel: "Difícil" },
+  { palavra: "VEDADO", dica: "Não deixa passar água.", nivel: "Difícil" },
+  { palavra: "FISIOLOGIA", dica: "Estudo das funções vitais.", nivel: "Difícil" },
+  { palavra: "QUADRADO", dica: "Figura de quatro ângulos retos.", nivel: "Difícil" },
+  { palavra: "AVE", dica: "Migração.", nivel: "Difícil" },
+  { palavra: "INCOMPLETO", dica: "Quase 100%.", nivel: "Difícil" },
+  { palavra: "SENESCÊNCIA", dica: "Processo de envelhecimento celular.", nivel: "Difícil" },
+  { palavra: "BIOMA", dica: "Cerrado.", nivel: "Difícil" },
+  { palavra: "RELATIVIDADE", dica: "ISAAC NEWTON.", nivel: "Difícil" },
+  { palavra: "QUASAR", dica: "Corpo celeste muito luminoso.", nivel: "Difícil" },
+  { palavra: "PALAVRAS", dica: "Formada com letras.", nivel: "Difícil" },
+  { palavra: "OBSOLETO", dica: "Caiu em desuso.", nivel: "Difícil" },
+  { palavra: "TERREMOTO", dica: "Tremores.", nivel: "Difícil" },
+  { palavra: "DENDROLOGIA", dica: "Estudo de árvores.", nivel: "Difícil" },
+  { palavra: "AGOSTO", dica: "Mês do estudante.", nivel: "Difícil" },
+  { palavra: "QUIMERA", dica: "Ser mitológico de partes diferentes.", nivel: "Difícil" },
+  { palavra: "LOSANGO", dica: "Figura geometrica.", nivel: "Difícil" },
+  { palavra: "VESPERTINO", dica: "Período do dia.", nivel: "Difícil" },
+  { palavra: "CODORNA", dica: "Produzem ovos.", nivel: "Difícil" },
+  { palavra: "QRCOD", dica: "Código.", nivel: "Difícil" },
+  { palavra: "LIVRO", dica: "Papel.", nivel: "Difícil" },
+  { palavra: "ABSCISSA", dica: "Coordenada no eixo x.", nivel: "Difícil" },
+  { palavra: "SINGULARIDADE", dica: "Ponto onde leis físicas falham.", nivel: "Difícil" },
+  { palavra: "COMPUTADOR", dica: "REDE, NAVEGAÇÃO.", nivel: "Difícil" },
+  { palavra: "LONGITUDINAL", dica: "Onda que vibra na direção da propagação.", nivel: "Difícil" },
+  { palavra: "BASQUETE", dica: "Bola.", nivel: "Difícil" },
+  { palavra: "MESTRE", dica: "Tem na escola.", nivel: "Difícil" },
+  { palavra: "GASOSO", dica: "Estado da matéria.", nivel: "Difícil" }
+];
+const opcoesUsadas = JSON.parse(localStorage.getItem('forca_opcoes_usadas_v1')||'[]');
+let numeroSelecionadoAtual = null;
+function marcarOpcaoUsada(numero) {
+  if (!opcoesUsadas.includes(numero)) {
+    opcoesUsadas.push(numero);
+    localStorage.setItem('forca_opcoes_usadas_v1', JSON.stringify(opcoesUsadas));
+  }
+}
+function zerarUsados() {
+  localStorage.removeItem('forca_opcoes_usadas_v1');
+  location.reload();
+}
+function montarPainelOpcoes() {
+  const painel = document.getElementById("painelOpcoes");
+  painel.innerHTML = "";
+  for(let i=1;i<=100;i++){
+    const btn = document.createElement('button');
+    btn.textContent = i.toString().padStart(2,'0');
+    btn.className = 'opcao-btn'+(opcoesUsadas.includes(i)?" usada":"");
+    btn.disabled = opcoesUsadas.includes(i)||perguntas[i-1]===undefined;
+    btn.onclick = function(){ iniciarForca(i); };
+    painel.appendChild(btn);
+  }
+}
+let palavraSorteada="", dicaSorteada="";
+let letrasAcertadas=[], letrasErradas=[];
+let maxErros=8, tempoLimite=60, tempoRestante=60, intervaloTempo=null, tempoAcabou=false;
+function definirTempo() {
+  let t = parseInt(document.getElementById('inputTempo').value, 10);
+  if (!isNaN(t) && t >= 10 && t <= 300) {
+    tempoLimite = t;
+    document.getElementById('mensagem').textContent = `Tempo definido: ${tempoLimite} segundos`;
+  } else {
+    tempoLimite = 60;
+    document.getElementById('inputTempo').value = 60;
+    document.getElementById('mensagem').textContent = "Defina de 10 a 300 segundos!";
+  }
+}
+function iniciarForca(numero) {
+  if (!perguntas[numero-1]) {
+    alert("Pergunta não cadastrada para este número."); return;
+  }
+  numeroSelecionadoAtual = numero;
+  document.getElementById('telaEntrada').style.display = 'none';
+  document.getElementById('telaForca').style.display = '';
+  document.activeElement.blur();
+  configurarJogoForca();
+}
+function voltarTelaEntrada(){
+  if(numeroSelecionadoAtual){ marcarOpcaoUsada(numeroSelecionadoAtual); numeroSelecionadoAtual=null; }
+  document.getElementById('telaEntrada').style.display='';
+  document.getElementById('telaForca').style.display='none';
+  montarPainelOpcoes();
+  reiniciarJogoForca();
+}
+function configurarJogoForca() {
+  const q = perguntas[numeroSelecionadoAtual-1];
+  palavraSorteada=q.palavra.toUpperCase();
+  dicaSorteada=q.dica||"";
+  iniciarJogoForca();
+  iniciarContagemTempo();
+}
+function iniciarContagemTempo() {
+  pararContagemTempo();
+  tempoRestante=tempoLimite; tempoAcabou=false; atualizarTempo();
+  intervaloTempo=setInterval(() => {
+    if(fimDeJogoForca()||tempoAcabou){pararContagemTempo(); return;}
+    tempoRestante--; atualizarTempo();
+    if(tempoRestante<=0){tempoAcabou=true;exibirFimTempo();pararContagemTempo();}
+  }, 1000);
+}
+function atualizarTempo() {
+  document.getElementById("tempoRestanteDiv").textContent = `⏳ Tempo restante: ${tempoRestante} segundos`;
+}
+function pararContagemTempo() {
+  if (intervaloTempo) clearInterval(intervaloTempo); intervaloTempo = null;
+}
+function exibirFimTempo() {
+  document.getElementById("mensagem").innerHTML =
+    `⏰ <b>Tempo esgotado</b>, você perdeu! A palavra era: <b>${palavraSorteada}</b>`;
+  exibirLetras();
+}
+function desenharForca(erros) {
+  const ctx = document.getElementById('forcaCanvas').getContext('2d');
+  ctx.clearRect(0, 0, 260, 340);
+  ctx.lineWidth = 4; ctx.strokeStyle = "#437dae";
+  ctx.beginPath(); ctx.moveTo(40,320); ctx.lineTo(220,320); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(70,320); ctx.lineTo(70,40); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(67,40); ctx.lineTo(190,40); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(190,40); ctx.lineTo(190,90); ctx.stroke();
+  if (erros > 0) { ctx.beginPath(); ctx.arc(190,115,25,0,2*Math.PI); ctx.stroke(); }
+  if (erros > 1) { ctx.beginPath(); ctx.moveTo(190,140); ctx.lineTo(190,235); ctx.stroke();}
+  if (erros > 2) { ctx.beginPath(); ctx.moveTo(190,155); ctx.lineTo(150,180); ctx.stroke(); }
+  if (erros > 3) { ctx.beginPath(); ctx.moveTo(190,155); ctx.lineTo(230,180); ctx.stroke(); }
+  if (erros > 4) { ctx.beginPath(); ctx.moveTo(190,235); ctx.lineTo(155,295); ctx.stroke();}
+  if (erros > 5) { ctx.beginPath(); ctx.moveTo(190,235); ctx.lineTo(225,295); ctx.stroke();}
+  if (erros > 6) { ctx.beginPath(); ctx.arc(142,186,7,0,2*Math.PI); ctx.stroke(); }
+  if (erros > 7) { ctx.beginPath(); ctx.arc(238,186,7,0,2*Math.PI); ctx.stroke();}
+}
+function exibirPalavra() {
+  let display = "";
+  for(let letra of palavraSorteada) {
+    display += /[A-ZÀ-Ý]/.test(letra) ?
+      (letrasAcertadas.includes(letra) ? letra : "_") + " "
+      : letra + " ";
+  }
+  document.getElementById("palavra").textContent = display.trim();
+}
+function exibirLetras() {
+  const alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let html = "";
+  for(let letra of alfabeto) {
+    let usada = letrasAcertadas.includes(letra)||letrasErradas.includes(letra)||tempoAcabou||fimDeJogoForca()?"usada":"";
+    html += `<span class="letra ${usada}" onclick="tentarLetra('${letra}')">${letra}</span>`;
+  }
+  document.getElementById("letras").innerHTML = html;
+}
+function exibirForca() {
+  document.getElementById("forca").textContent =
+    `Erros: ${letrasErradas.length}/${maxErros}`;
+  desenharForca(letrasErradas.length);
+}
+function tentarLetra(letra) {
+  if (letrasAcertadas.includes(letra)||letrasErradas.includes(letra)||fimDeJogoForca()||tempoAcabou) return;
+  if (palavraSorteada.includes(letra)) letrasAcertadas.push(letra);
+  else letrasErradas.push(letra);
+  atualizarTelaForca();
+  checarFimJogoForca();
+}
+function atualizarTelaForca() {
+  exibirPalavra();
+  exibirLetras();
+  exibirForca();
+  document.getElementById("dica").textContent = dicaSorteada ? "Dica: "+dicaSorteada : " ";
+  atualizarTempo();
+}
+function checarFimJogoForca() {
+  if(fimDeJogoForca()&&!tempoAcabou){
+    let mensagem = "";
+    if(letrasErradas.length >= maxErros)
+      mensagem = `Você perdeu! A palavra era: <b>${palavraSorteada}</b>`;
+    else if(palavraSorteada.split('').every(l => !(/[A-ZÀ-Ý]/).test(l) || letrasAcertadas.includes(l)))
+      mensagem = "Parabéns! Você venceu!";
+    document.getElementById("mensagem").innerHTML = mensagem;
+    pararContagemTempo();
+  }
+}
+function fimDeJogoForca() {
+  return letrasErradas.length >= maxErros ||
+    palavraSorteada.split('').every(l => !(/[A-ZÀ-Ý]/).test(l) || letrasAcertadas.includes(l));
+}
+function iniciarJogoForca() {
+  letrasAcertadas = [];
+  letrasErradas = [];
+  tempoAcabou = false;
+  document.getElementById("mensagem").textContent = "";
+  atualizarTelaForca();
+  desenharForca(0);
+}
+function reiniciarJogoForca() {
+  letrasAcertadas = [];
+  letrasErradas = [];
+  tempoAcabou = false;
+  palavraSorteada = "";
+  dicaSorteada = "";
+  document.getElementById("mensagem").textContent = "";
+  document.getElementById("palavra").textContent = '';
+  document.getElementById("letras").innerHTML = '';
+  document.getElementById("forca").textContent = '';
+  document.getElementById("dica").textContent = '';
+  document.getElementById("tempoRestanteDiv").textContent = '';
+  pararContagemTempo();
+  desenharForca(0);
+}
+window.tentarLetra = tentarLetra;
+window.addEventListener('keydown', function(e){
+  if(document.getElementById('telaForca').style.display !== 'none' &&
+     !fimDeJogoForca() && !tempoAcabou) {
+    let letra = e.key.toUpperCase();
+    if(letra.length === 1 && letra >= "A" && letra <= "Z")
+      tentarLetra(letra);
+  }
+});
+montarPainelOpcoes();
+desenharForca(0);
+</script>
+</body>
+</html>

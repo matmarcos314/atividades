@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Marcos Antonio de Jesus - Tela Inicial</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      position: relative;
+    }
+    .logo-curso {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 250px;           /* Aumenta o tamanho da imagem */
+      height: auto;
+      margin: 24px 0 0 24px;  /* Espaçamento das bordas */
+      border-radius: 10px;    /* Cantos levemente arredondados */
+      box-shadow: 0 4px 16px rgba(30,60,114,0.18);
+      background: #fff;
+      object-fit: contain;
+      z-index: 10;
+    }
+    .titulo-nome {
+      font-size: 3.2em;
+      color: #fff;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-align: center;
+      margin-bottom: 10px;
+      margin-top: 130px;      /* Ajuste para não sobrepor a logo aumentada */
+      text-shadow: 2px 2px 10px rgba(30,60,114,0.25);
+      border-radius: 12px;
+      padding: 0 16px;
+      transition: letter-spacing 0.3s, text-shadow 0.3s;
+    }
+    .titulo-nome:hover {
+      letter-spacing: 6px;
+      text-shadow: 4px 4px 24px #185a9d;
+    }
+    .apresentacao {
+      color: #e0e0e0;
+      font-size: 1.2em;
+      text-align: center;
+      margin-bottom: 40px;
+      max-width: 600px;
+      background: rgba(30,60,114,0.12);
+      border-radius: 10px;
+      padding: 12px 18px;
+      box-shadow: 0 2px 8px rgba(30,60,114,0.1);
+    }
+    .botoes-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+    .botao-3d {
+      width: 220px;
+      height: 50px;
+      background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+      color: #fff;
+      font-size: 1.1em;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(30,60,114,0.3), 0 2px 4px #185a9d;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-bottom: 10px;
+      transform: perspective(700px) rotateY(5deg);
+    }
+    .botao-3d:hover {
+      background: linear-gradient(90deg, #185a9d 0%, #43cea2 100%);
+      transform: scale(1.08) perspective(700px) rotateY(-2deg);
+      box-shadow: 0 16px 32px rgba(30,60,114,0.5), 0 4px 8px #43cea2;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Logo do curso no topo esquerdo -->
+  <img src="02.png" alt="Logo do curso" class="logo-curso">
+
+  <!-- Cabeçalho -->
+  <div class="titulo-nome">Marcos Antonio de Jesus</div>
+
+  <!-- Apresentação -->
+  <div class="apresentacao">
+    Professor em <b>Barreiras, Bahia</b> no <b>Colégio Estadual Prisco Viana</b> e em <b>Luís Eduardo Magalhães</b> na <b>Escola Municipal José Cardoso de Lima</b>.
+  </div>
+
+  <!-- Um botão apenas -->
+  <div class="botoes-container">
+    <button class="botao-3d" onclick="window.location.href='pagina1.html'">Geometria Plana e Espacial</button>
+  </div>
+
+</body>
+</html>

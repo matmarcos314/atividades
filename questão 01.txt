@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Página SAEB</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #f8fafc;
+      font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+    .imagem-container {
+      max-width: 90vw;
+      max-height: 60vh;
+      margin-bottom: 24px;
+    }
+    .imagem-container img {
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+      object-fit: contain;
+      background: #fff;
+    }
+    .botoes {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 320px;
+      width: 90vw;
+    }
+    button {
+      flex: 1 1 90px;
+      padding: 12px 20px;
+      font-size: 1.05em;
+      font-weight: 600;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(90deg, #74deb2 0%, #b8d6f9 100%);
+      color: #24635d;
+      box-shadow: 0 2px 8px rgba(51, 130, 120, 0.12);
+      transition: background 0.22s ease, transform 0.12s ease;
+    }
+    button:hover, button:focus {
+      background: linear-gradient(90deg, #b8d6f9 0%, #74deb2 100%);
+      transform: scale(1.06);
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="imagem-container">
+    <img src="saeb.png" alt="Imagem SAEB" />
+  </div>
+  <div class="botoes">
+    <button onclick="window.history.back()">
+      Voltar
+    </button>
+    <button onclick="window.location.href='pagina3.html'">
+      Avançar
+    </button>
+    <button onclick="window.location.href='index.html'">
+      Tela inicial
+    </button>
+  </div>
+</body>
+</html>

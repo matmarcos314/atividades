@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ESCOLA MUNICIPAL JOSÉ CARDOSO DE LIMA</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: #f8fafc;
+      font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      background: linear-gradient(135deg, #f1f8fd 0%, #f8f4ea 100%);
+      border-radius: 26px;
+      box-shadow: 0 6px 24px rgba(60, 120, 180, 0.07);
+      max-width: 430px;
+      width: 90vw;
+      padding: 32px 12px 32px 12px;
+      text-align: center;
+    }
+    .logo {
+      width: auto;
+      height: 90px;
+      display: block;
+      margin: 0 auto 12px auto;
+      border-radius: 18px;
+      object-fit: contain;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(55, 113, 153, 0.10);
+      padding: 4px;
+    }
+    .nome-escola {
+      color: #245894; /* Azul do círculo/logo */
+      font-size: 1.08em;
+      letter-spacing: 0.3px;
+      margin-bottom: 7px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .disciplina {
+      color: #3e7a38; /* Verde do "M" */
+      font-size: 1em;
+      font-weight: 500;
+      margin-bottom: 18px;
+      font-style: italic;
+      letter-spacing: 0.1px;
+    }
+    .subtitulo {
+      color: #b68113; /* Amarelo/laranja do "J"/abelha */
+      margin-bottom: 22px;
+      font-size: 1.09em;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+    .etapas-linha {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .etapa {
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(88, 122, 130, 0.07);
+      padding: 10px 20px;
+      font-size: 1.05em;
+      font-weight: bold;
+      min-width: 94px;
+      margin-top: 6px;
+      color: #fff;
+    }
+    .sabebrasil {
+      background-color: #245894; /* Azul da logo */
+    }
+    .sabe {
+      background-color: #3e7a38; /* Verde da logo */
+    }
+    .saeb {
+      background-color: #873dbf; /* Roxo do "L" */
+    }
+    .botao {
+      margin-top: 8px;
+      padding: 12px 30px;
+      font-size: 1.1em;
+      font-weight: bold;
+      border: none;
+      border-radius: 11px;
+      background: linear-gradient(90deg, #fcdc53 0%, #b68113 100%);
+      color: #473705;
+      box-shadow: 0 2px 8px rgba(183, 155, 16, 0.11);
+      cursor: pointer;
+      transition: background 0.17s, transform 0.13s;
+    }
+    .botao:hover,
+    .botao:focus {
+      background: linear-gradient(90deg, #fff1a5 0%, #ffe274 100%);
+      transform: scale(1.04);
+      outline: none;
+    }
+    @media (min-width: 600px) {
+      .container {
+        max-width: 520px;
+        padding: 38px 26px 36px 26px;
+      }
+      .logo {
+        height: 120px;
+        margin-bottom: 15px;
+      }
+      .nome-escola {
+        font-size: 1.17em;
+      }
+      .disciplina {
+        font-size: 1.06em;
+        margin-bottom: 26px;
+      }
+      .subtitulo {
+        font-size: 1.16em;
+      }
+      .etapa {
+        font-size: 1.13em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="044.png"  class="logo" />
+    <div class="nome-escola">ESCOLA MUNICIPAL JOSÉ CARDOSO DE LIMA</div>
+    <div class="disciplina">Disciplina: Matemática - Ano Letivo 2025</div>
+    <div class="subtitulo">Atividades aplicadas em sala</div>
+    <div class="etapas-linha">
+      <div class="etapa sabebrasil">SABEBRASIL</div>
+      <div class="etapa sabe">SABE</div>
+      <div class="etapa saeb">SAEB</div>
+    </div>
+    <button class="botao" onclick="window.location.href='questão 01.html'">
+      Iniciar
+    </button>
+  </div>
+</body>
+</html>

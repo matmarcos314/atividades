@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Calculadora de Comprimento e Área do Círculo</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      min-height: 100vh;
+      color: #222;
+    }
+
+    .voltar-btn {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      background: linear-gradient(90deg, #185a9d 0%, #43cea2 100%);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 7px 22px;
+      font-size: 1em;
+      cursor: pointer;
+      font-weight: 500;
+      box-shadow: 0 2px 6px rgba(0,0,0,.15);
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .voltar-btn:hover {
+      background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+      box-shadow: 0 6px 16px rgba(0,0,0,.11);
+    }
+
+    .container {
+      max-width: 520px;
+      background: #fff;
+      margin: 80px auto 40px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,.18);
+      padding: 30px 24px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #1e3c72;
+      margin-bottom: 20px;
+      font-size: 2em;
+    }
+
+    .menu-label {
+      font-weight: 600;
+      color: #185a9d;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    select, input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      border-radius: 6px;
+      border: 1px solid #bbb;
+      font-size: 1em;
+      background: #f3f6fa;
+      outline-color: #43cea2;
+    }
+
+    .campo-formula {
+      margin: 16px 0 18px 0;
+      padding: 12px 14px;
+      background: #ebf8fd;
+      border-radius: 8px;
+      color: #134e65;
+      font-size: 1.09em;
+      box-shadow: 0 2px 10px #185a9d23;
+      word-break: break-word;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .fracao-formula {
+      display: inline-block;
+      vertical-align: middle;
+      text-align: center;
+      margin-top: 2px;
+      margin-bottom: 2px;
+    }
+    .fracao-numerador {
+      padding-bottom: 0px;
+      font-size: 1em;
+    }
+    .fracao-divisor {
+      border-top: 1.5px solid #134e65;
+      width: 60px;
+      margin: 0 auto 2px auto;
+      display: block;
+    }
+    .fracao-denominador {
+      font-size: 1em;
+    }
+
+    button:not(.voltar-btn) {
+      width: 100%;
+      padding: 12px;
+      font-size: 1.1em;
+      background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+      margin-top: 8px;
+    }
+    button:not(.voltar-btn):hover {
+      background: linear-gradient(90deg, #185a9d 0%, #43cea2 100%);
+    }
+
+    .resultado {
+      margin-top: 18px;
+      background: #e4ffe1;
+      border-left: 4px solid #43cea2;
+      padding: 10px 16px;
+      border-radius: 6px;
+      color: #143c2c;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="voltar-btn" onclick="window.history.back()">Voltar</button>
+
+  <div class="container">
+    <h1>Comprimento e Área do Círculo</h1>
+
+    <label class="menu-label" for="formulas">Escolha a fórmula:</label>
+    <select id="formulas" onchange="mostrarFormula()">
+      <option value="">-- Selecione --</option>
+      <option value="comprimento">Comprimento (perímetro)</option>
+      <option value="area">Área do círculo</option>
+    </select>
+
+    <div id="campo-formula"></div>
+    <form id="form-dados" onsubmit="calcular(event)"></form>
+    <div class="resultado" id="resultado"></div>
+  </div>
+
+<script>
+  function mostrarFormula() {
+    const selecao = document.getElementById('formulas').value;
+    const campoFormula = document.getElementById('campo-formula');
+    const formDados = document.getElementById('form-dados');
+    const resultado = document.getElementById('resultado');
+    resultado.innerHTML = '';
+    formDados.innerHTML = '';
+
+    if (selecao === "comprimento") {
+      campoFormula.innerHTML = `
+        <div class="campo-formula">
+          Comprimento (C) do círculo:<br>
+          <strong>C = 2 × π × r</strong>
+        </div>
+      `;
+      formDados.innerHTML = `
+        <input type="number" step="any" id="raio-c" placeholder="Raio (r)" required>
+        <button type="submit">Calcular</button>
+      `;
+    } else if (selecao === "area") {
+      campoFormula.innerHTML = `
+        <div class="campo-formula">
+          Área (A) do círculo:<br>
+          <strong>A = π × r<sup>2</sup></strong>
+        </div>
+      `;
+      formDados.innerHTML = `
+        <input type="number" step="any" id="raio-a" placeholder="Raio (r)" required>
+        <button type="submit">Calcular</button>
+      `;
+    } else {
+      campoFormula.innerHTML = '';
+    }
+  }
+
+  function calcular(event) {
+    event.preventDefault();
+    const selecao = document.getElementById('formulas').value;
+    const resultado = document.getElementById('resultado');
+    let mensagem = "";
+
+    if (selecao === "comprimento") {
+      const r = parseFloat(document.getElementById('raio-c').value);
+      if (r < 0) {
+        mensagem = "O raio deve ser positivo.";
+      } else {
+        const comprimento = 2 * Math.PI * r;
+        mensagem = `Comprimento = ${comprimento}`;
+      }
+    } else if (selecao === "area") {
+      const r = parseFloat(document.getElementById('raio-a').value);
+      if (r < 0) {
+        mensagem = "O raio deve ser positivo.";
+      } else {
+        const area = Math.PI * (r ** 2);
+        mensagem = `Área = ${area}`;
+      }
+    } else {
+      mensagem = "Escolha uma fórmula.";
+    }
+
+    resultado.textContent = mensagem;
+  }
+</script>
+</body>
+</html>

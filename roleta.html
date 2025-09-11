@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Plano Cartesiano com Drone Interativo</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+  }
+
+  #grid-container {
+    position: relative;
+    width: 600px;
+    height: 600px;
+    border: 2px solid #333;
+    background-color: #f9f9f9;
+    margin-bottom: 20px;
+  }
+
+  svg {
+    width: 600px;
+    height: 600px;
+    display: block;
+  }
+
+  /* Plano cartesiano: linhas */
+  .line {
+    stroke: #bbb;
+    stroke-width: 1;
+  }
+
+  /* eixo X e Y */
+  .axis {
+    stroke: #333;
+    stroke-width: 2;
+  }
+
+  /* Texto das coordenadas */
+  .coord-label {
+    font-size: 12px;
+    fill: #333;
+  }
+
+  /* Drone maior */
+  .drone {
+    cursor: pointer;
+  }
+
+  /* Hélices - animação de giro */
+  .helice {
+    transform-origin: center;
+    animation: girar 1s linear infinite;
+  }
+
+  @keyframes girar {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Botões de controle */
+  #controls {
+    display: flex;
+    flex-wrap: wrap;
+    width: 230px;
+    justify-content: center;
+  }
+
+  #controls button {
+    width: 60px;
+    height: 60px;
+    margin: 5px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: 2px solid #333;
+    background-color: #eee;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  #coordinates-display {
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<h2>Plano Cartesiano Interativo com Drone</h2>
+
+<div id="coordinates-display">Posição do drone: (0, 0)</div>
+
+<div id="grid-container">
+  <svg id="grid" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" >
+    <!-- Linhas horizontais -->
+    <g id="lines-horizontal"></g>
+
+    <!-- Linhas verticais -->
+    <g id="lines-vertical"></g>
+
+    <!-- Eixos -->
+    <line x1="0" y1="300" x2="600" y2="300" class="axis" />
+    <line x1="300" y1="0" x2="300" y2="600" class="axis" />
+
+    <!-- Labels eixo X -->
+    <g id="labels-x"></g>
+
+    <!-- Labels eixo Y -->
+    <g id="labels-y"></g>
+
+    <!-- Drone Group -->
+    <g id="drone" class="drone" transform="translate(300,300)">
+      <!-- Corpo do drone -->
+      <rect x="-40" y="-20" width="80" height="40" fill="#4A90E2" rx="10" ry="10" />
+      <rect x="-45" y="-10" width="90" height="20" fill="#2096F3" rx="5" ry="5" />
+
+      <!-- Hélices -->
+      <circle cx="-55" cy="-35" r="15" fill="#666" />
+      <circle cx="55" cy="-35" r="15" fill="#666" />
+      <circle cx="-55" cy="35" r="15" fill="#666" />
+      <circle cx="55" cy="35" r="15" fill="#666" />
+
+      <!-- Hélices blades (animadas) -->
+      <g class="helice" transform="translate(-55,-35)">
+        <rect x="-2" y="-15" width="4" height="30" fill="#ccc" />
+        <rect x="-15" y="-2" width="30" height="4" fill="#ccc" />
+      </g>
+      <g class="helice" transform="translate(55,-35)">
+        <rect x="-2" y="-15" width="4" height="30" fill="#ccc" />
+        <rect x="-15" y="-2" width="30" height="4" fill="#ccc" />
+      </g>
+      <g class="helice" transform="translate(-55,35)">
+        <rect x="-2" y="-15" width="4" height="30" fill="#ccc" />
+        <rect x="-15" y="-2" width="30" height="4" fill="#ccc" />
+      </g>
+      <g class="helice" transform="translate(55,35)">
+        <rect x="-2" y="-15" width="4" height="30" fill="#ccc" />
+        <rect x="-15" y="-2" width="30" height="4" fill="#ccc" />
+      </g>
+    </g>
+  </svg>
+</div>
+
+<div id="controls">
+  <button id="up" title="Cima">↑</button>
+  <button id="left" title="Esquerda">←</button>
+  <button id="down" title="Baixo">↓</button>
+  <button id="right" title="Direita">→</button>
+</div>
+
+<script>
+  const gridSize = 600;
+  const unitPixels = 30; // Cada unidade no plano cartesiano equivale a 30 pixels
+  const halfGrid = gridSize / 2;
+  const drone = document.getElementById('drone');
+  const coordDisplay = document.getElementById('coordinates-display');
+
+  // Variáveis da posição inicial do drone (coordenadas inteiras)
+  let posX = 0;
+  let posY = 0;
+
+  // Construir as linhas do grid (excluindo os eixos)
+  const linesHorizontal = document.getElementById('lines-horizontal');
+  const linesVertical = document.getElementById('lines-vertical');
+  const labelsX = document.getElementById('labels-x');
+  const labelsY = document.getElementById('labels-y');
+
+  // Linhas horizontais e labels (Y)
+  for(let i = -10; i <= 10; i++) {
+    if(i !== 0) { // eixos já desenhados
+      let y = halfGrid - i * unitPixels;
+      // linha horizontal
+      let lineH = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      lineH.setAttribute("x1", 0);
+      lineH.setAttribute("y1", y);
+      lineH.setAttribute("x2", gridSize);
+      lineH.setAttribute("y2", y);
+      lineH.setAttribute("class", "line");
+      linesHorizontal.appendChild(lineH);
+
+      // label eixo Y
+      let labelY = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      labelY.setAttribute("x", halfGrid + 5);
+      labelY.setAttribute("y", y - 3);
+      labelY.setAttribute("class", "coord-label");
+      labelY.textContent = i;
+      labelsY.appendChild(labelY);
+    }
+  }
+
+  // Linhas verticais e labels (X)
+  for(let i = -10; i <= 10; i++) {
+    if(i !== 0) {
+      let x = halfGrid + i * unitPixels;
+      // linha vertical
+      let lineV = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      lineV.setAttribute("x1", x);
+      lineV.setAttribute("y1", 0);
+      lineV.setAttribute("x2", x);
+      lineV.setAttribute("y2", gridSize);
+      lineV.setAttribute("class", "line");
+      linesVertical.appendChild(lineV);
+
+      // label eixo X
+      let labelX = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      labelX.setAttribute("x", x - 5);
+      labelX.setAttribute("y", halfGrid - 10);
+      labelX.setAttribute("class", "coord-label");
+      labelX.textContent = i;
+      labelsX.appendChild(labelX);
+    }
+  }
+
+  // Função para atualizar a posição do drone visualmente e no display
+  function atualizarPosicao() {
+    // Limitar posições para -10 a 10
+    posX = Math.min(10, Math.max(-10, posX));
+    posY = Math.min(10, Math.max(-10, posY));
+
+    // Converter coordenadas para pixels
+    let px = halfGrid + posX * unitPixels;
+    let py = halfGrid - posY * unitPixels;
+
+    // Atualizar transformação do drone no SVG
+    drone.setAttribute('transform', `translate(${px},${py})`);
+
+    // Atualizar display
+    coordDisplay.textContent = `Posição do drone: (${posX}, ${posY})`;
+  }
+
+  // Funções para movimentar o drone
+  document.getElementById('up').addEventListener('click', () => {
+    posY++;
+    atualizarPosicao();
+  });
+
+  document.getElementById('down').addEventListener('click', () => {
+    posY--;
+    atualizarPosicao();
+  });
+
+  document.getElementById('left').addEventListener('click', () => {
+    posX--;
+    atualizarPosicao();
+  });
+
+  document.getElementById('right').addEventListener('click', () => {
+    posX++;
+    atualizarPosicao();
+  });
+
+  // Inicializa o drone na posição central (0,0)
+  atualizarPosicao();
+</script>
+</body>
+</html>

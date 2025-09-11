@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Calculadora de Área do Triângulo</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      min-height: 100vh;
+      color: #222;
+    }
+
+    .voltar-btn {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      background: linear-gradient(90deg, #185a9d 0%, #43cea2 100%);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 7px 22px;
+      font-size: 1em;
+      cursor: pointer;
+      font-weight: 500;
+      box-shadow: 0 2px 6px rgba(0,0,0,.15);
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .voltar-btn:hover {
+      background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+      box-shadow: 0 6px 16px rgba(0,0,0,.11);
+    }
+
+    .container {
+      max-width: 520px;
+      background: #fff;
+      margin: 80px auto 40px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,.18);
+      padding: 30px 24px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #1e3c72;
+      margin-bottom: 20px;
+      font-size: 2em;
+    }
+
+    .menu-label {
+      font-weight: 600;
+      color: #185a9d;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    select, input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      border-radius: 6px;
+      border: 1px solid #bbb;
+      font-size: 1em;
+      background: #f3f6fa;
+      outline-color: #43cea2;
+    }
+
+    .par-coordenadas {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .par-coordenadas input {
+      width: 100%;
+    }
+
+    .campo-formula {
+      margin: 16px 0 18px 0;
+      padding: 12px 14px;
+      background: #ebf8fd;
+      border-radius: 8px;
+      color: #134e65;
+      font-size: 1.09em;
+      box-shadow: 0 2px 10px #185a9d23;
+      word-break: break-word;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .fracao-formula {
+      display: inline-block;
+      vertical-align: middle;
+      text-align: center;
+      margin-top: 2px;
+      margin-bottom: 2px;
+    }
+    .fracao-numerador {
+      padding-bottom: 0px;
+      font-size: 1em;
+    }
+    .fracao-divisor {
+      border-top: 1.5px solid #134e65;
+      width: 60px;
+      margin: 0 auto 2px auto;
+      display: block;
+    }
+    .fracao-denominador {
+      font-size: 1em;
+    }
+
+    .matriz {
+      font-family: monospace;
+      font-size: 0.97em;
+      margin: 5px 0 0 0;
+      color: #008080;
+      text-align: left;
+    }
+
+    button:not(.voltar-btn) {
+      width: 100%;
+      padding: 12px;
+      font-size: 1.1em;
+      background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+      margin-top: 8px;
+    }
+    button:not(.voltar-btn):hover {
+      background: linear-gradient(90deg, #185a9d 0%, #43cea2 100%);
+    }
+
+    .resultado {
+      margin-top: 18px;
+      background: #e4ffe1;
+      border-left: 4px solid #43cea2;
+      padding: 10px 16px;
+      border-radius: 6px;
+      color: #143c2c;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Botão de voltar -->
+  <button class="voltar-btn" onclick="window.history.back()">Voltar</button>
+
+  <!-- Container calculadora -->
+  <div class="container">
+    <h1>Área do Triângulo</h1>
+
+    <label class="menu-label" for="formulas">Escolha a fórmula:</label>
+    <select id="formulas" onchange="mostrarFormula()">
+      <option value="">-- Selecione --</option>
+      <option value="basica">Básica (base e altura)</option>
+      <option value="heron">Heron (3 lados)</option>
+      <option value="abSeno">Dois lados e ângulo</option>
+      <option value="coordenadas">Coordenadas (matriz)</option>
+      <option value="equilatero">Triângulo Equilátero (lado)</option>
+    </select>
+
+    <div id="campo-formula"></div>
+    <form id="form-dados" onsubmit="calcular(event)"></form>
+    <div class="resultado" id="resultado"></div>
+  </div>
+
+<script>
+  function mostrarFormula() {
+    const selecao = document.getElementById('formulas').value;
+    const campoFormula = document.getElementById('campo-formula');
+    const formDados = document.getElementById('form-dados');
+    const resultado = document.getElementById('resultado');
+    resultado.innerHTML = '';
+    formDados.innerHTML = '';
+
+    if (selecao === "basica") {
+      campoFormula.innerHTML = `
+        <div class="campo-formula">
+          Área =
+          <span class="fracao-formula">
+            <span class="fracao-numerador">base × altura</span>
+            <span class="fracao-divisor"></span>
+            <span class="fracao-denominador">2</span>
+          </span>
+        </div>
+      `;
+      formDados.innerHTML = `
+        <input type="number" step="any" id="base" placeholder="Base" required>
+        <input type="number" step="any" id="altura" placeholder="Altura" required>
+        <button type="submit">Calcular</button>
+      `;
+    } else if (selecao === "heron") {
+      campoFormula.innerHTML = `
+        <div class="campo-formula">
+          Área = √ [ s(s-a)(s-b)(s-c) ]<br><br>
+          onde&nbsp;<span class="fracao-formula">
+            <span class="fracao-numerador">a + b + c</span>
+            <span class="fracao-divisor" style="width:40px"></span>
+            <span class="fracao-denominador">2</span>
+          </span>
+          (&nbsp;isso é o semiperímetro s&nbsp;)
+        </div>
+      `;
+      formDados.innerHTML = `
+        <input type="number" step="any" id="a" placeholder="Lado a" required>
+        <input type="number" step="any" id="b" placeholder="Lado b" required>
+        <input type="number" step="any" id="c" placeholder="Lado c" required>
+        <button type="submit">Calcular</button>
+      `;
+    } else if (selecao === "abSeno") {
+      campoFormula.innerHTML = `
+        <div class="campo-formula">
+          Área =
+          <span class="fracao-formula">
+            <span class="fracao-numerador">a × b × sen(θ)</span>
+            <span class="fracao-divisor"></span>
+            <span class="fracao-denominador">2</span>
+          </span>
+          <br>θ em graus
+        </div>
+      `;
+      formDados.innerHTML = `
+        <input type="number" step="any" id="a" placeholder="Lado a" required>
+        <input type="number" step="any" id="b" placeholder="Lado b" required>
+        <input type="number" step="any" id="angulo" placeholder="Ângulo θ (graus)" required>
+        <button type="submit">Calcular</button>
+      `;
+    } else if (selecao === "coordenadas") {
+      campoFormula.innerHTML = `
+        <div class="campo-formula">
+          Área =
+          <span class="fracao-formula">
+            <span class="fracao-numerador">| determinante |</span>
+            <span class="fracao-divisor"></span>
+            <span class="fracao-denominador">2</span>
+          </span>
+          <div class="matriz">
+            | x₁&nbsp; y₁&nbsp; 1 |<br>
+            | x₂&nbsp; y₂&nbsp; 1 |<br>
+            | x₃&nbsp; y₃&nbsp; 1 |
+          </div>
+        </div>
+      `;
+      formDados.innerHTML = `
+        <div class="par-coordenadas">
+          <input type="number" step="any" id="x1" placeholder="x₁" required>
+          <input type="number" step="any" id="y1" placeholder="y₁" required>
+        </div>
+        <div class="par-coordenadas">
+          <input type="number" step="any" id="x2" placeholder="x₂" required>
+          <input type="number" step="any" id="y2" placeholder="y₂" required>
+        </div>
+        <div class="par-coordenadas">
+          <input type="number" step="any" id="x3" placeholder="x₃" required>
+          <input type="number" step="any" id="y3" placeholder="y₃" required>
+        </div>
+        <button type="submit">Calcular</button>
+      `;
+    } else if (selecao === "equilatero") {
+      campoFormula.innerHTML = `
+        <div class="campo-formula">
+          Área =
+          <span class="fracao-formula">
+            <span class="fracao-numerador">l<sup>2</sup> × √3</span>
+            <span class="fracao-divisor" style="width:36px;"></span>
+            <span class="fracao-denominador">4</span>
+          </span>
+          <br>
+          <small>(l: lado do triângulo equilátero)</small>
+        </div>
+      `;
+      formDados.innerHTML = `
+        <input type="number" step="any" id="lado" placeholder="Lado do triângulo equilátero" required>
+        <button type="submit">Calcular</button>
+      `;
+    } else {
+      campoFormula.innerHTML = '';
+    }
+  }
+
+  function calcular(event) {
+    event.preventDefault();
+    const selecao = document.getElementById('formulas').value;
+    const resultado = document.getElementById('resultado');
+    let area = 0, mensagem = "";
+
+    if (selecao === "basica") {
+      const base = parseFloat(document.getElementById('base').value);
+      const altura = parseFloat(document.getElementById('altura').value);
+      area = (base * altura) / 2;
+      mensagem = `Área = ${area}`;
+    } else if (selecao === "heron") {
+      const a = parseFloat(document.getElementById('a').value);
+      const b = parseFloat(document.getElementById('b').value);
+      const c = parseFloat(document.getElementById('c').value);
+      const s = (a + b + c) / 2;
+      let arg = s * (s - a) * (s - b) * (s - c);
+      if (arg < 0) {
+        mensagem = "Não é possível formar um triângulo com esses lados.";
+      } else {
+        area = Math.sqrt(arg);
+        mensagem = `Área = ${area}`;
+      }
+    } else if (selecao === "abSeno") {
+      const a = parseFloat(document.getElementById('a').value);
+      const b = parseFloat(document.getElementById('b').value);
+      const angulo = parseFloat(document.getElementById('angulo').value);
+      const rad = angulo * Math.PI / 180;
+      area = (a * b * Math.sin(rad)) / 2;
+      mensagem = `Área = ${area}`;
+    } else if (selecao === "coordenadas") {
+      const x1 = parseFloat(document.getElementById('x1').value);
+      const y1 = parseFloat(document.getElementById('y1').value);
+      const x2 = parseFloat(document.getElementById('x2').value);
+      const y2 = parseFloat(document.getElementById('y2').value);
+      const x3 = parseFloat(document.getElementById('x3').value);
+      const y3 = parseFloat(document.getElementById('y3').value);
+      const det =
+        x1 * (y2 - y3) +
+        x2 * (y3 - y1) +
+        x3 * (y1 - y2);
+      area = Math.abs(det) / 2;
+      mensagem = `Área = ${area}`;
+    } else if (selecao === "equilatero") {
+      const lado = parseFloat(document.getElementById('lado').value);
+      area = ((lado ** 2) * Math.sqrt(3)) / 4;
+      mensagem = `Área = ${area}`;
+    } else {
+      mensagem = "Escolha uma fórmula.";
+    }
+
+    resultado.textContent = mensagem;
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <title>Mostrar PDF com Botões Centralizados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f4f4f4;
+            margin: 0;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding-top: 20px;
+        }
+        button {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            color: white;
+            background: #4a90e2; /* azul harmônico */
+        }
+        button:hover {
+            background: #357ABD; /* azul mais escuro no hover */
+        }
+        #btnVoltar {
+            background: #3366cc; /* azul harmônico mais escuro */
+        }
+        #btnVoltar:hover {
+            background: #254b8f;
+        }
+        #btnAvancar {
+            background: #5aade6; /* azul claro harmônico */
+        }
+        #btnAvancar:hover {
+            background: #3b8edc;
+        }
+        #pdfViewer {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ccc;
+            display: none;
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <button id="btnVerAtividade">Ver Atividade</button>
+        <button id="btnVoltar">Voltar</button>
+        <button id="btnAvancar">Avançar</button>
+    </div>
+    <iframe id="pdfViewer"></iframe>
+    <script>
+        document.getElementById('btnVerAtividade').addEventListener('click', function() {
+            const iframe = document.getElementById('pdfViewer');
+            iframe.src = 'file:///C:/Users/rafa_/OneDrive/Área%20de%20Trabalho/Curso/DEP/SABEBRASIL.pdf';
+            iframe.style.display = 'block';
+            iframe.scrollIntoView({behavior: 'smooth'});
+        });
+        document.getElementById('btnVoltar').addEventListener('click', function() {
+            window.location.href = 'file:///C:/Users/rafa_/OneDrive/Área%20de%20Trabalho/Curso/DEP/droneaudio.html';
+        });
+        document.getElementById('btnAvancar').addEventListener('click', function() {
+            window.location.href = 'file:///C:/Users/rafa_/OneDrive/Área%20de%20Trabalho/Curso/DEP/telafinal.html';
+        });
+    </script>
+</body>
+</html>

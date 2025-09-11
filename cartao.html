@@ -1,0 +1,410 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage[a4paper,margin=10mm]{geometry}
+\usepackage{parskip}
+\usepackage{tikz}
+\usetikzlibrary{shadows, positioning}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{xcolor}
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+
+% Dimensões dos crachás
+\newlength{\cardwidth}
+\newlength{\cardheight}
+\setlength{\cardwidth}{9cm}
+\setlength{\cardheight}{5.5cm}
+
+% Distância vertical do nome para 20% da altura do crachá
+\newlength{\namenovpos}
+\setlength{\namenovpos}{11mm} % 20% de 55mm = 11mm
+
+% Estilo do crachá SEM fundo
+\tikzset{badge/.style={
+  draw=black,
+  thick,
+  rounded corners=5pt,
+  %fill=gray!10, % REMOVIDO!
+  drop shadow={shadow xshift=1pt,shadow yshift=-1pt,opacity=0.2},
+  inner sep=10pt,
+  minimum width=\cardwidth,
+  minimum height=\cardheight
+}}
+
+\begin{document}
+
+% Crachás dois por linha
+
+\noindent
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{ADAILSON AGUIAR};
+  \end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{ADRIAN MARQUES};
+  \end{tikzpicture}
+\end{minipage}
+
+\vspace{5mm}
+
+\noindent
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{ÁDRIMY DAMASCENA};
+  \end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{ALESSANDRA SANTOS};
+  \end{tikzpicture}
+\end{minipage}
+
+\vspace{5mm}
+
+\noindent
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{ALESSANDRA SANTOS};
+  \end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{ALÍCIA ALENCAR};
+  \end{tikzpicture}
+\end{minipage}
+
+\vspace{5mm}
+
+\noindent
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{ANA BEATRIZ};
+  \end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{ANA CAROLINA};
+  \end{tikzpicture}
+\end{minipage}
+
+\vspace{5mm}
+
+\noindent
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{ANA CLARA};
+  \end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{CAMILA NUNES};
+  \end{tikzpicture}
+\end{minipage}
+
+\vspace{5mm}
+
+\noindent
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{CLAUDIA ANDRADE};
+  \end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{DANIEL FIGUEIREDO};
+  \end{tikzpicture}
+\end{minipage}
+
+\vspace{5mm}
+
+\noindent
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{EMÍLIA MAMÉDIA};
+  \end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{GABRIEL MASCARENHAS};
+  \end{tikzpicture}
+\end{minipage}
+
+\vspace{5mm}
+
+\noindent
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{GUILHERME OLIVEIRA};
+  \end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{ISABELLA HAMERMULLER};
+  \end{tikzpicture}
+\end{minipage}
+
+\vspace{5mm}
+
+\noindent
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{ISABELLA RIBEIRO};
+  \end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{JHONATAN MENEZES};
+  \end{tikzpicture}
+\end{minipage}
+
+\vspace{5mm}
+
+\noindent
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{JUAN DE};
+  \end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{JÚLIA ARAÚJO};
+  \end{tikzpicture}
+\end{minipage}
+
+\vspace{5mm}
+
+\noindent
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{KAUANY SOUZA};
+  \end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{KETLIN LOURRANE};
+  \end{tikzpicture}
+\end{minipage}
+
+\vspace{5mm}
+
+\noindent
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{LARA SOUZA};
+  \end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+  \centering
+  \begin{tikzpicture}
+    \node[badge] (box) {};
+    \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{LAURA ARAUJO};
+  \end{tikzpicture}
+\end{minipage}
+
+\vspace{5mm}
+
+\noindent
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+ \centering
+ \begin{tikzpicture}
+   \node[badge] (box) {};
+   \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{LETÍCIA REIS};
+ \end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+ \centering
+ \begin{tikzpicture}
+   \node[badge] (box) {};
+   \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{LORENA LOPES};
+ \end{tikzpicture}
+\end{minipage}
+
+\vspace{5mm}
+
+\noindent
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+ \centering
+ \begin{tikzpicture}
+   \node[badge] (box) {};
+   \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{LUÍS RICARDO};
+ \end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+ \centering
+ \begin{tikzpicture}
+   \node[badge] (box) {};
+   \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{MARIA EDUARDA};
+ \end{tikzpicture}
+\end{minipage}
+
+\vspace{5mm}
+
+\noindent
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+ \centering
+ \begin{tikzpicture}
+   \node[badge] (box) {};
+   \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{MAURICIO RICARDO};
+ \end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+ \centering
+ \begin{tikzpicture}
+   \node[badge] (box) {};
+   \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{PEDRO VÍCTOR};
+ \end{tikzpicture}
+\end{minipage}
+
+\vspace{5mm}
+
+\noindent
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+ \centering
+ \begin{tikzpicture}
+   \node[badge] (box) {};
+   \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{PIETRAH ELISE};
+ \end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+ \centering
+ \begin{tikzpicture}
+   \node[badge] (box) {};
+   \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{RAMIN ELLY};
+ \end{tikzpicture}
+\end{minipage}
+
+\vspace{5mm}
+
+\noindent
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+ \centering
+ \begin{tikzpicture}
+   \node[badge] (box) {};
+   \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{SAMUEL SANTANA};
+ \end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+ \centering
+ \begin{tikzpicture}
+   \node[badge] (box) {};
+   \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{THAYZA BALBINA};
+ \end{tikzpicture}
+\end{minipage}
+
+\vspace{5mm}
+
+\noindent
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+ \centering
+ \begin{tikzpicture}
+   \node[badge] (box) {};
+   \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{ULISSES LEONARDO};
+ \end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+ \centering
+ \begin{tikzpicture}
+   \node[badge] (box) {};
+   \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{VICTOR GUILHERME};
+ \end{tikzpicture}
+\end{minipage}
+
+\vspace{5mm}
+
+\noindent
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+ \centering
+ \begin{tikzpicture}
+   \node[badge] (box) {};
+   \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{WALISON HENRIQUE};
+ \end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+ \centering
+ \begin{tikzpicture}
+   \node[badge] (box) {};
+   \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{YANKE GOMES};
+ \end{tikzpicture}
+\end{minipage}
+
+\vspace{5mm}
+
+\noindent
+\begin{minipage}[t][\cardheight][c]{\cardwidth}
+ \centering
+ \begin{tikzpicture}
+   \node[badge] (box) {};
+   \node[below=\namenovpos of box.center, font=\sffamily\Large\bfseries, text=black]{YNGRID CRUZ};
+ \end{tikzpicture}
+\end{minipage}
+
+\end{document}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Geometria Plana e Espacial</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      min-height: 100vh;
+    }
+
+    .voltar-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: linear-gradient(90deg, #185a9d 0%, #43cea2 100%);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1em;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 7px 22px;
+      box-shadow: 0 2px 8px rgba(30,60,114,0.13);
+      transition: background 0.2s, transform 0.2s, color 0.2s;
+      z-index: 99;
+    }
+
+    .voltar-btn:hover {
+      background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+      color: #00FFFF;
+      transform: scale(1.04);
+    }
+
+    .conteudo-central {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 100px;
+    }
+
+    .titulo-pagina {
+      font-size: 2.5em;
+      color: #fff;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 35px;
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.25);
+      transition: color 0.2s;
+    }
+
+    .botoes-geometria {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .botao-3d {
+      width: 320px;
+      height: auto;
+      padding: 12px 16px;
+      background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+      color: #fff;
+      font-size: 1em;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, color 0.2s;
+      font-weight: 500;
+      text-align: center;
+      white-space: normal;
+      word-wrap: break-word;
+    }
+
+    .botao-3d:hover {
+      background: linear-gradient(90deg, #185a9d 0%, #43cea2 100%);
+      color: #00FFFF;
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+  </style>
+</head>
+<body>
+
+  <button class="voltar-btn" onclick="window.history.back()">← Voltar</button>
+
+  <div class="conteudo-central">
+    <div class="titulo-pagina">Geometria Plana e Espacial</div>
+    <div class="botoes-geometria">
+      <button class="botao-3d" onclick="window.location.href='pagina2.html'">
+        Área do Triângulo
+      </button>
+      <button class="botao-3d" onclick="window.location.href='pagina3.html'">
+        Comprimento do Círculo <br>e Área da Circunferência
+      </button>
+      <button class="botao-3d" onclick="window.location.href='pagina3.html'">
+        Perímetro e Área do Quadrado<br/>e do Retângulo
+      </button>
+      <button class="botao-3d" onclick="window.location.href='area-perimetro-trapezio.html'">
+        Perímetro e Área do Trapézio
+      </button>
+      <button class="botao-3d" onclick="window.location.href='area-perimetro-losango.html'">
+        Perímetro e Área do Losango
+      </button>
+      <button class="botao-3d" onclick="window.location.href='area-perimetro-hexagono.html'">
+        Perímetro e Área do Hexágono
+      </button>
+    </div>
+  </div>
+</body>
+</html>

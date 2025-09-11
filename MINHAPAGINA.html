@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Marcos Antonio de Jesus - Caixa de Ferramentas</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Nunito', sans-serif;
+    background: #1e3c72;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-left: 220px;
+    box-sizing: border-box;
+  }
+
+  /* ======= LOGO ======= */
+  .fixed-logo-container {
+    position: fixed;
+    top: 60%;
+    left: 10vw;
+    transform: translateY(-60%);
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 200px;
+    gap: 20px;
+  }
+  .fixed-logo {
+    max-width: 160px;
+    max-height: 160px;
+    border-radius: 12px;
+    background: white;
+    padding: 4px;
+    animation: pulseSlide 4s ease-in-out infinite;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+  }
+  @keyframes pulseSlide {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-7px) scale(1.05); }
+  }
+
+  /* ======= CABEÇALHO ======= */
+  header {
+    background-color: #0b2545;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    height: 70px;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1500;
+  }
+  header h1 { font-weight: 900; font-size: 2.8rem; padding-left: 200px; }
+  nav { display: flex; gap: 20px; }
+  nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  nav a:hover { background-color: #2980b9; padding: 8px; border-radius: 6px; }
+
+  /* ======= SIDEBAR ======= */
+  .menu-button { background: none; border: none; cursor: pointer; }
+  .menu-button svg { fill: white; width: 28px; height: 28px; }
+  .sidebar {
+    position: fixed;
+    top: 70px;
+    right: 0;
+    width: 260px;
+    height: calc(100% - 70px);
+    background: #0b2545;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 1000;
+  }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar a {
+    color: white;
+    text-decoration: none;
+  }
+
+  /* ======= CONTEÚDO ======= */
+  main {
+    flex-grow: 1;
+    max-width: 900px;
+    margin: 110px auto 40px;
+    background: #1e3c72;
+    border-radius: 16px;
+    box-shadow: 0 16px 32px rgba(64, 224, 208, 0.3);
+    padding: 40px 50px;
+  }
+  main h2 { border-bottom: 3px solid white; padding-bottom: 6px; }
+
+  /* ======= BOTÕES ======= */
+  .tools-list a {
+    display: inline-block;
+    font-weight: 600;
+    padding: 12px 20px;
+    border-radius: 30px;
+    border: 2px solid white;
+    transition: all 0.3s ease-in-out;
+    margin-bottom: 12px;
+    text-align: center;
+    width: 200px;
+    background-color: white;
+    color: #1e3c72;
+    text-decoration: none;
+  }
+  .tools-list a:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 15px rgba(255,255,255,0.8);
+  }
+  .tools-list a.criar-cartao { background-color: #A020F0; color: white; }
+  .tools-list a.jogos { background-color: #00FF7F; color: #1e3c72; }
+  .tools-list a.pesquisas { background-color: #FF00FF; color: white; }
+
+  /* ======= MODAL DO FORMULÁRIO ======= */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 3000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+  }
+  .modal-content {
+    background: white;
+    color: black;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+    position: relative;
+  }
+  .modal-content h3 {
+    margin-top: 0;
+    text-align: center;
+  }
+  .modal-content label {
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+  }
+  .modal-content input,
+  .modal-content textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  .modal-content textarea { resize: none; height: 80px; }
+  .modal-content button {
+    background: #1e3c72;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    margin-top: 15px;
+    width: 100%;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .modal-content button:hover { background: #2980b9; }
+  .close-btn {
+    position: absolute;
+    top: 10px; right: 10px;
+    font-size: 22px;
+    cursor: pointer;
+    color: #333;
+  }
+
+  /* ======= RODAPÉ ======= */
+  footer {
+    background-color: #0b2545;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-size: 0.9rem;
+    font-style: italic;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-top: 1px solid rgba(255,255,255,0.2);
+  }
+</style>
+</head>
+<body>
+  <div class="fixed-logo-container">
+    <img src="03.png" alt="Logo 1" class="fixed-logo" />
+    <img src="044.png" alt="Logo 2" class="fixed-logo" />
+  </div>
+
+  <header>
+    <h1>Marcos Antonio de Jesus</h1>
+    <nav>
+      <a href="#">Página Inicial</a>
+      <a href="#">Material Didático</a>
+      <a href="#">Projetos</a>
+      <a href="#" id="contatoMenu">Contato</a>
+    </nav>
+    <button class="menu-button" id="menuToggle">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <rect y="4" width="24" height="2"></rect>
+        <rect y="11" width="24" height="2"></rect>
+        <rect y="18" width="24" height="2"></rect>
+      </svg>
+    </button>
+  </header>
+
+  <aside class="sidebar" id="sidebar">
+    <h2>Opções</h2>
+    <a href="#">Perfil</a>
+    <a href="#">Configurações</a>
+    <a href="#">Ajuda</a>
+    <a href="#">Sair</a>
+  </aside>
+
+  <main>
+    <section>
+      <h2>Formação Acadêmica</h2>
+      <ul>
+        <li>Licenciado em Matemática - IFBA</li>
+        <li>Mestrado ProfMat - UFT</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Atuação Profissional</h2>
+      <ul>
+        <li>Barreiras - Colégio Estadual Prisco Viana</li>
+        <li>Luís Eduardo Magalhães - Escola Municipal José Cardoso de Lima</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Caixa de Ferramentas</h2>
+      <div class="tools-list">
+        <a class="criar-cartao" href="file:///C:/Users/rafa_/OneDrive/%C3%81rea%20de%20Trabalho/Curso/DEP/jogo%20exemplo%20.html">Criar Cartão</a>
+        <a class="jogos" href="file:///C:/Users/rafa_/OneDrive/%C3%81rea%20de%20Trabalho/Curso/DEP/tela.html">Jogos</a>
+        <a class="pesquisas" href="file:///C:/Users/rafa_/OneDrive/%C3%81rea%20de%20Trabalho/Curso/DEP/F%C3%B3rmulas.html">Fórmulas</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- RODAPÉ FIXO -->
+  <footer>
+    Mjesus - Tecnologia 2025
+  </footer>
+
+  <!-- MODAL DO FORMULÁRIO -->
+  <div class="modal" id="contatoModal">
+    <div class="modal-content">
+      <span class="close-btn" id="closeModal">&times;</span>
+      <h3>Formulário de Contato</h3>
+      <form>
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome">
+
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefone" name="telefone">
+
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" name="email">
+
+        <label for="mensagem">Mensagem:</label>
+        <textarea id="mensagem" name="mensagem"></textarea>
+
+        <button type="submit">Enviar</button>
+      </form>
+    </div>
+  </div>
+
+<script>
+  // Menu lateral
+  const menuButton = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+  menuButton.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+  });
+
+  // Modal contato
+  const modal = document.getElementById('contatoModal');
+  const contatoMenu = document.getElementById('contatoMenu');
+
+  contatoMenu.onclick = function(e) {
+    e.preventDefault();
+    modal.style.display = 'flex';
+  };
+
+  document.getElementById('closeModal').onclick = function() {
+    modal.style.display = 'none';
+  };
+
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = 'none';
+    }
+  };
+</script>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Documento A4 com Retângulos Dinâmicos</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f0f0f0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+    }
+    .a4-container {
+        width: 210mm;
+        background: white;
+        border-radius: 8px;
+        margin-top: 20px;
+        position: relative;
+        height: 297mm; /* altura da folha A4 */
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .rectangle-container {
+        position: absolute;
+        background-color: white;
+        border: 0.75mm solid #000;
+    }
+    .name-container {
+        position: absolute;
+        background-color: white;
+        border: 0.75mm solid #000;
+        border-radius: 2.2mm;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 3px;
+        overflow-wrap: break-word;
+        text-align: center;
+        font-family: 'Times New Roman', Times, serif;
+        font-weight: bold;
+        color: #000;
+        letter-spacing: 0.33mm;
+        word-break: break-word;
+    }
+    .name-text {
+        font-size: 4.4mm;
+        line-height: 9.8888mm;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    #controls {
+        width: 210mm;
+        max-width: 100%;
+        margin-bottom: 20px;
+        background: white;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        justify-content: center;
+    }
+    label {
+        font-weight: bold;
+        font-size: 14px;
+    }
+    input[type=number] {
+        width: 60px;
+        padding: 5px;
+        font-size: 14px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        text-align: center;
+    }
+    button {
+        padding: 10px 20px;
+        font-weight: bold;
+        font-size: 14px;
+        border-radius: 6px;
+        border: none;
+        background-color: #3498db;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    button:hover {
+        background-color: #2980b9;
+    }
+    textarea {
+        width: 420px;
+        max-width: 100%;
+        height: 100px;
+        resize: vertical;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+    @media print {
+        body { background: white; padding: 0; margin: 0; }
+        #controls, textarea { display: none; }
+        .a4-container {
+            box-shadow: none;
+            width: 210mm;
+            height: 297mm;
+            border-radius: 0;
+            margin: 0;
+        }
+        .rectangle-container, .name-container {
+            position: absolute !important;
+            border-color: black !important;
+            background-color: white !important;
+        }
+        .name-text {
+            font-size: 4.4mm !important;
+            line-height: 9.8888mm !important;
+            font-weight: bold !important;
+            font-family: 'Times New Roman', Times, serif !important;
+            color: black !important;
+            letter-spacing: 0.33mm !important;
+            text-align: center !important;
+            word-break: break-word !important;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div id="controls">
+    <label for="rectWidth">Largura (mm):</label>
+    <input type="number" id="rectWidth" min="10" max="200" value="99" />
+    <label for="rectHeight">Altura (mm):</label>
+    <input type="number" id="rectHeight" min="10" max="140" value="55" />
+    <button onclick="applyRectSize()">Aplicar Tamanho</button>
+    <button onclick="printDocument()">🖨️ Imprimir</button>
+</div>
+
+<textarea id="nameInput" placeholder="Cole aqui os nomes, um por linha..."></textarea>
+<button style="margin-bottom:20px;" onclick="fillCards()">Preencher Cartões</button>
+
+<div class="a4-container" id="a4Container">
+    <!-- Os retângulos serão gerados dinamicamente aqui -->
+</div>
+
+<script>
+// Tamanho da folha A4 em mm
+const sheetWidth = 210;
+const sheetHeight = 297;
+const margin = 5; // margem em mm para a área imprimível dentro da folha
+
+// Espaçamento horizontal e vertical entre retângulos, em mm
+const spacingX = 5;
+const spacingY = 5;
+
+// Container principal onde os retângulos são adicionados
+const container = document.getElementById('a4Container');
+
+function mmToPx(mm) {
+    // Aproximação de conversão mm para pixels para tela comum (96 dpi)
+    return (mm * 96) / 25.4;
+}
+
+function clearRectangles() {
+    container.innerHTML = '';
+}
+
+function createRectangle(id, width, height, top, left) {
+    const rect = document.createElement('div');
+    rect.className = 'rectangle-container';
+    rect.style.width = width + 'mm';
+    rect.style.height = height + 'mm';
+    rect.style.top = top + 'mm';
+    rect.style.left = left + 'mm';
+    rect.dataset.id = id;
+
+    // Criar a caixa de nome dentro do retângulo
+    const nameHeight = Math.min(10, height * 0.18); // caixa nome com altura relativa ao retângulo, limite máximo 10mm
+    const nameWidth = width * 0.75;
+
+    const nameBox = document.createElement('div');
+    nameBox.className = 'name-container';
+    nameBox.style.top = (top + height - nameHeight - 3) + 'mm'; // 3mm de espaçamento interno
+    nameBox.style.left = (left + (width - nameWidth) / 2) + 'mm';
+    nameBox.style.width = nameWidth + 'mm';
+    nameBox.style.height = nameHeight + 'mm';
+
+    const nameText = document.createElement('span');
+    nameText.className = 'name-text';
+    nameText.textContent = '';
+    nameBox.appendChild(nameText);
+
+    container.appendChild(rect);
+    container.appendChild(nameBox);
+}
+
+function applyRectSize() {
+    // Pegar valores do input
+    let rectWidth = parseFloat(document.getElementById('rectWidth').value);
+    let rectHeight = parseFloat(document.getElementById('rectHeight').value);
+
+    if (isNaN(rectWidth) || isNaN(rectHeight)) {
+        alert('Informe um valor válido para largura e altura.');
+        return;
+    }
+
+    // Limitar largura para máximo da folha menos margens
+    rectWidth = Math.min(rectWidth, sheetWidth - 2 * margin);
+    // Limitar altura para máximo da folha menos margens
+    rectHeight = Math.min(rectHeight, sheetHeight - 2 * margin);
+
+    clearRectangles();
+
+    // Calcular quantos cabem na horizontal
+    const maxCols = Math.floor((sheetWidth - 2 * margin + spacingX) / (rectWidth + spacingX));
+    // Calcular quantos cabem na vertical
+    const maxRows = Math.floor((sheetHeight - 2 * margin + spacingY) / (rectHeight + spacingY));
+
+    let count = 0;
+    // Vamos limitar para criar até 40 retângulos (ou pode ajustar conforme desejar)
+    const totalRects = maxCols * maxRows;
+
+    for (let row = 0; row < maxRows; row++) {
+        for (let col = 0; col < maxCols; col++) {
+            const top = margin + row * (rectHeight + spacingY);
+            const left = margin + col * (rectWidth + spacingX);
+            createRectangle(count, rectWidth, rectHeight, top, left);
+            count++;
+            if (count >= totalRects) break;
+        }
+        if (count >= totalRects) break;
+    }
+
+    // Depois de criar, preencher os nomes já se tiver texto
+    fillCards();
+}
+
+function processLine(line) {
+    line = line.replace(/^\d+\s*[-–]\s*/, ''); // remove número e traço no início
+    const parts = line.trim().split(/\s+/);
+    if (parts.length === 0) return '';
+    if (parts.length === 1) return parts[0];
+    return parts[0] + ' ' + parts[parts.length - 1];
+}
+
+function fillCards() {
+    const input = document.getElementById('nameInput').value.trim();
+    const lines = input.split('\n').map(n => n.trim()).filter(n => n.length > 0);
+    const nameTexts = container.querySelectorAll('.name-text');
+
+    for (let i = 0; i < nameTexts.length; i++) {
+        if (i < lines.length) {
+            nameTexts[i].textContent = processLine(lines[i]);
+        } else {
+            nameTexts[i].textContent = '';
+        }
+    }
+}
+
+function printDocument() {
+    window.print();
+}
+
+// Inicializar com os tamanhos padrão definidos nos inputs
+applyRectSize();
+
+</script>
+
+</body>
+</html>

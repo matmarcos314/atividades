@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>📚 Os Detetives da Matemática - História em Quadrinhos</title>
+    <!-- Importação de fontes -->
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet" />
+    
+    <!-- MathJax para fórmulas matemáticas -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Comic Neue', cursive;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .comic-book {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .comic-header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .comic-title {
+            font-family: 'Bangers', cursive;
+            font-size: 3em;
+            color: #f1c40f;
+            text-shadow: 3px 3px 0px #e74c3c, 6px 6px 10px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        
+        .comic-subtitle {
+            font-size: 1.3em;
+            color: #ecf0f1;
+            font-weight: 600;
+        }
+        
+        .page-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .comic-page {
+            display: none;
+            padding: 30px;
+            min-height: 600px;
+            background: #f8f9fa;
+            position: relative;
+        }
+        
+        .comic-page.active {
+            display: block;
+            animation: pageFlip 0.6s ease-in-out;
+        }
+        
+        @keyframes pageFlip {
+            0% { transform: rotateY(-90deg); opacity: 0; }
+            50% { transform: rotateY(-45deg); opacity: 0.5; }
+            100% { transform: rotateY(0deg); opacity: 1; }
+        }
+        
+        .panel {
+            background: white;
+            border: 4px solid #2c3e50;
+            border-radius: 15px;
+            margin: 20px 0;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .panel-large {
+            min-height: 200px;
+        }
+        
+        .panel-medium {
+            min-height: 150px;
+        }
+        
+        .panel-small {
+            min-height: 100px;
+        }
+        
+        .character-scene {
+            display: flex;
+            align-items: flex-start;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .character-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 20px;
+            font-size: 2.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid #2c3e50;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            flex-shrink: 0;
+        }
+        
+        .alicia-avatar { 
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        }
+        
+        .lara-avatar { 
+            background: linear-gradient(135deg, #4ecdc4, #00d2d3);
+        }
+        
+        .ulisses-avatar { 
+            background: linear-gradient(135deg, #45b7d1, #3742fa);
+        }
+        
+        .pedro-avatar { 
+            background: linear-gradient(135deg, #96ceb4, #2ed573);
+        }
+        
+        .speech-bubble {
+            background: white;
+            border: 3px solid #2c3e50;
+            border-radius: 20px;
+            padding: 18px;
+            position: relative;
+            flex: 1;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            left: -18px;
+            top: 25px;
+            width: 0;
+            height: 0;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            border-right: 18px solid #2c3e50;
+        }
+        
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            left: -12px;
+            top: 28px;
+            width: 0;
+            height: 0;
+            border-top: 9px solid transparent;
+            border-bottom: 9px solid transparent;
+            border-right: 15px solid white;
+        }
+        
+        .character-name {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .dialogue-text {
+            color: #34495e;
+            line-height: 1.4;
+            font-size: 1.05em;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #f1c40f 0%, #f39c12 100%);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            color: #2c3e50;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .math-display {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.3em;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            font-family: 'Comic Neue', cursive;
+        }
+        
+        .graph-container {
+            background: #ecf0f1;
+            border: 3px solid #34495e;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .graph-title {
+            color: #2c3e50;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .navigation {
+            background: #2c3e50;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-button {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Comic Neue', cursive;
+            min-width: 120px;
+        }
+        
+        .nav-button:hover:not(:disabled) {
+            background: linear-gradient(45deg, #2980b9, #1abc9c);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        .nav-button:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .page-indicator {
+            color: white;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .thought-bubble {
+            background: #e8f5e8;
+            border: 3px dashed #27ae60;
+            border-radius: 20px;
+            padding: 15px;
+            margin: 15px 0;
+            font-style: italic;
+            color: #2d5a2d;
+            position: relative;
+        }
+        
+        .thought-bubble::before {
+            content: "💭";
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #e8f5e8;
+            padding: 0 5px;
+            font-size: 1.2em;
+        }
+        
+        .explosion-effect {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 2em;
+            animation: explode 0.6s ease-in-out infinite;
+        }
+        
+        @keyframes explode {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(180deg); }
+        }
+        
+        .comic-sound {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #e74c3c;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-family: 'Bangers', cursive;
+            font-size: 1.1em;
+            transform: rotate(-15deg);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+        }
+        
+        /* Estilos da tela de boas-vindas */
+        .welcome-screen {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 20px;
+            margin: 10px;
+        }
+        
+        .school-header {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .school-header h2 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            color: #f1c40f;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-family: 'Bangers', cursive;
+            letter-spacing: 1px;
+        }
+        
+        .subject-info {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .subject, .teacher {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .greeting h1 {
+            font-family: 'Bangers', cursive;
+            font-size: 2.2em;
+            color: #f1c40f;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 15px;
+        }
+        
+        .classes {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .class-badge {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.1em;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+        
+        .comic-preview {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .preview-title {
+            font-family: 'Bangers', cursive;
+            font-size: 1.8em;
+            color: #f1c40f;
+            margin-bottom: 8px;
+        }
+        
+        .preview-subtitle {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+        
+        .preview-characters {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .mini-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            border: 3px solid white;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .alicia-mini { background: linear-gradient(135deg, #ff6b6b, #ee5a24); }
+        .lara-mini { background: linear-gradient(135deg, #4ecdc4, #00d2d3); }
+        .ulisses-mini { background: linear-gradient(135deg, #45b7d1, #3742fa); }
+        .pedro-mini { background: linear-gradient(135deg, #96ceb4, #2ed573); }
+        
+        .learning-objectives {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: left;
+            backdrop-filter: blur(10px);
+        }
+        
+        .learning-objectives h3 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #f1c40f;
+            font-size: 1.2em;
+        }
+        
+        .learning-objectives ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .learning-objectives li {
+            padding: 8px 0;
+            font-size: 1em;
+            line-height: 1.4;
+        }
+        
+        .start-adventure-btn {
+            background: linear-gradient(45deg, #f1c40f, #f39c12);
+            color: #2c3e50;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Comic Neue', cursive;
+            box-shadow: 0 6px 20px rgba(241, 196, 15, 0.4);
+            margin-top: 20px;
+        }
+        
+        .start-adventure-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(241, 196, 15, 0.6);
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .comic-book {
+                border-radius: 15px;
+            }
+            
+            .comic-title {
+                font-size: 1.8em;
+                line-height: 1.2;
+            }
+            
+            .comic-subtitle {
+                font-size: 1em;
+            }
+            
+            .page-counter {
+                top: 10px;
+                right: 10px;
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
+            
+            .comic-page {
+                padding: 15px;
+                min-height: auto;
+            }
+            
+            .panel {
+                margin: 15px 0;
+                padding: 15px;
+            }
+            
+            .character-scene {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .character-avatar {
+                width: 60px;
+                height: 60px;
+                margin-right: 0;
+                margin-bottom: 15px;
+                font-size: 2em;
+            }
+            
+            .speech-bubble {
+                margin: 0;
+                padding: 15px;
+            }
+            
+            .speech-bubble::before,
+            .speech-bubble::after {
+                display: none;
+            }
+            
+            .character-name {
+                font-size: 1em;
+            }
+            
+            .dialogue-text {
+                font-size: 0.95em;
+            }
+            
+            .math-display {
+                font-size: 1.1em;
+                padding: 15px;
+                margin: 15px 0;
+            }
+            
+            .graph-container {
+                padding: 15px;
+                margin: 15px 0;
+            }
+            
+            .graph-container svg {
+                width: 100%;
+                height: auto;
+                max-width: 400px;
+            }
+            
+            .navigation {
+                padding: 15px;
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-button {
+                padding: 12px 20px;
+                font-size: 1em;
+                min-width: auto;
+                width: 100%;
+                max-width: 200px;
+            }
+            
+            .page-indicator {
+                order: -1;
+                font-size: 1em;
+            }
+            
+            .school-header h2 {
+                font-size: 1.4em;
+                line-height: 1.3;
+            }
+            
+            .greeting h1 {
+                font-size: 1.8em;
+                line-height: 1.2;
+            }
+            
+            .classes {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .class-badge {
+                padding: 8px 16px;
+                font-size: 1em;
+            }
+            
+            .preview-title {
+                font-size: 1.5em;
+                line-height: 1.2;
+            }
+            
+            .preview-subtitle {
+                font-size: 1em;
+            }
+            
+            .mini-avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2em;
+            }
+            
+            .learning-objectives {
+                text-align: center;
+            }
+            
+            .learning-objectives ul {
+                text-align: left;
+                display: inline-block;
+            }
+            
+            .learning-objectives li {
+                font-size: 0.9em;
+            }
+            
+            .start-adventure-btn {
+                padding: 12px 25px;
+                font-size: 1.1em;
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .thought-bubble {
+                margin: 10px 0;
+                padding: 12px;
+                font-size: 0.9em;
+            }
+            
+            .comic-sound {
+                top: 10px;
+                right: 10px;
+                padding: 6px 12px;
+                font-size: 1em;
+            }
+            
+            .explosion-effect {
+                top: 5px;
+                right: 5px;
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="comic-book">
+        <div class="comic-header">
+            <div class="page-counter">
+                Página <span id="current-page">0</span> de <span id="total-pages">8</span>
+            </div>
+            <h1 class="comic-title">OS DETETIVES DA MATEMÁTICA</h1>
+            <p class="comic-subtitle">O Mistério da Função Quadrática</p>
+        </div>
+        
+        <!-- Página 0 - Tela de Boas-vindas -->
+        <div class="comic-page active" id="page-0">
+            <div class="welcome-screen">
+                <div class="school-header">
+                    <h2>🏫 Escola Municipal José Cardoso de Lima</h2>
+                    <div class="subject-info">
+                        <span class="subject">📐 Matemática</span>
+                        <span class="teacher">👨‍🏫 Professor Marcos</span>
+                    </div>
+                </div>
+                
+                <div class="welcome-message">
+                    <div class="greeting">
+                        <h1>🎉 Bem-vindos, Turmas!</h1>
+                        <div class="classes">
+                            <span class="class-badge">9º C</span>
+                            <span class="class-badge">9º F</span>
+                        </div>
+                    </div>
+                    
+                    <div class="comic-preview">
+                        <div class="preview-title">📚 Os Detetives da Matemática</div>
+                        <div class="preview-subtitle">O Mistério da Função Quadrática</div>
+                        <div class="preview-characters">
+                            <div class="mini-avatar alicia-mini">👩‍🦱</div>
+                            <div class="mini-avatar lara-mini">👩‍🦰</div>
+                            <div class="mini-avatar ulisses-mini">👨‍🦲</div>
+                            <div class="mini-avatar pedro-mini">👨‍🦱</div>
+                        </div>
+                    </div>
+                    
+                    <div class="start-button-container">
+                        <button class="start-adventure-btn" onclick="nextPage()">
+                            🚀 Começar a Aventura!
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Página 1 -->
+        <div class="comic-page" id="page-1">
+            <div class="panel panel-large">
+                <div class="comic-sound">EUREKA!</div>
+                <div class="character-scene">
+                    <div class="character-avatar alicia-avatar">👩‍🦱</div>
+                    <div class="speech-bubble">
+                        <div class="character-name">Alícia</div>
+                        <div class="dialogue-text">
+                            Olha só esse gráfico! Ele parece representar o movimento de um projétil. Vocês acham que é isso mesmo?
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="graph-container">
+                    <div class="graph-title">🎯 O Gráfico Misterioso: f(x) = -3x² + 105x</div>
+                    <svg width="450" height="280" viewBox="0 0 450 280">
+                        <!-- Fundo do céu -->
+                        <defs>
+                            <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#98FB98;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="450" height="230" fill="url(#skyGradient)"/>
+                        
+                        <!-- Solo -->
+                        <rect x="0" y="230" width="450" height="50" fill="#8B4513"/>
+                        
+                        <!-- Grade de fundo -->
+                        <defs>
+                            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#bdc3c7" stroke-width="0.5" opacity="0.3"/>
+                            </pattern>
+                        </defs>
+                        <rect width="450" height="230" fill="url(#grid)"/>
+                        
+                        <!-- Eixos -->
+                        <line x1="50" y1="230" x2="420" y2="230" stroke="#2c3e50" stroke-width="3"/>
+                        <line x1="50" y1="230" x2="50" y2="30" stroke="#2c3e50" stroke-width="3"/>
+                        
+                        <!-- Marcações no eixo X -->
+                        <text x="45" y="245" font-size="12" font-weight="bold" fill="#2c3e50" text-anchor="middle">0</text>
+                        <text x="365" y="245" font-size="12" font-weight="bold" fill="#2c3e50" text-anchor="middle">35</text>
+                        
+                        <!-- Marcações no eixo Y -->
+                        <text x="35" y="235" font-size="12" font-weight="bold" fill="#2c3e50" text-anchor="middle">0</text>
+                        <text x="35" y="180" font-size="12" font-weight="bold" fill="#2c3e50" text-anchor="middle">500</text>
+                        <text x="35" y="125" font-size="12" font-weight="bold" fill="#2c3e50" text-anchor="middle">1000</text>
+                        <text x="35" y="70" font-size="12" font-weight="bold" fill="#2c3e50" text-anchor="middle">1500</text>
+                        
+                        <!-- Parábola precisa para f(x) = -3x² + 105x com simetria perfeita -->
+                        <!-- Raízes: x = 0 e x = 35, Vértice: x = 17.5, y = 1312.5 -->
+                        <!-- Coordenadas ajustadas: A(50,230), Vértice(207.5,70), B(365,230) - Vértice ajustado de y=50 para y=70 -->
+                        <path d="M 50 230 
+                                 Q 70 210 90 180
+                                 Q 110 145 130 110
+                                 Q 150 80 170 60
+                                 Q 187.5 62 207.5 70
+                                 Q 227.5 62 245 60
+                                 Q 265 80 285 110
+                                 Q 305 145 325 180
+                                 Q 345 210 365 230" 
+                              stroke="#e74c3c" stroke-width="4" fill="none"/>
+                        
+                        <!-- Pontos A (0,0) e B (35,0) - as raízes -->
+                        <circle cx="50" cy="230" r="8" fill="#e74c3c"/>
+                        <circle cx="365" cy="230" r="8" fill="#e74c3c"/>
+                        <text x="40" y="250" font-size="16" font-weight="bold" fill="#2c3e50">A(0,0)</text>
+                        <text x="340" y="250" font-size="16" font-weight="bold" fill="#2c3e50">B(35,0)</text>
+                        
+                        <!-- Vértice (17.5, 1312.5) - centralizado e ajustado na altura para y=70 -->
+                        <circle cx="207.5" cy="70" r="8" fill="#27ae60"/>
+                        <text x="130" y="60" font-size="14" font-weight="bold" fill="#27ae60">Vértice (17.5, 1312.5)</text>
+                        
+                        <!-- Linha pontilhada do vértice - centralizada e ajustada para y=70 -->
+                        <line x1="207.5" y1="70" x2="207.5" y2="230" stroke="#27ae60" stroke-width="2" stroke-dasharray="5,5" opacity="0.7"/>
+                        
+                        <!-- Linhas de simetria -->
+                        <line x1="128.75" y1="140" x2="286.25" y2="140" stroke="#3498db" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+                        <text x="150" y="135" font-size="10" fill="#3498db" opacity="0.7">Eixo de simetria</text>
+                        
+                        <!-- Projétil no ponto máximo -->
+                        <circle cx="207.5" cy="70" r="6" fill="#f1c40f"/>
+                        <text x="217.5" y="75" font-size="16" fill="#f39c12">🚀</text>
+                        
+                        <!-- Setas indicando direção -->
+                        <path d="M 80 210 L 90 200 L 85 205 L 90 200 L 95 205" stroke="#3498db" stroke-width="2" fill="none"/>
+                        <path d="M 335 210 L 325 200 L 330 205 L 325 200 L 320 205" stroke="#3498db" stroke-width="2" fill="none"/>
+                        
+                        <!-- Rótulos dos eixos -->
+                        <text x="235" y="270" font-size="14" font-weight="bold" fill="#2c3e50" text-anchor="middle">Distância (x)</text>
+                        <text x="20" y="140" font-size="14" font-weight="bold" fill="#2c3e50" text-anchor="middle" transform="rotate(-90, 20, 140)">Altura f(x)</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Página 2 -->
+        <div class="comic-page" id="page-2">
+            <div class="panel panel-medium">
+                <div class="character-scene">
+                    <div class="character-avatar lara-avatar">👩‍🦰</div>
+                    <div class="speech-bubble">
+                        <div class="character-name">Lara</div>
+                        <div class="dialogue-text">
+                            Já reparei que ele começa do ponto A, atinge o máximo lá em cima e depois cai no ponto B. Acho que você está certa, Alícia!
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel panel-medium">
+                <div class="explosion-effect">💡</div>
+                <div class="character-scene">
+                    <div class="character-avatar lara-avatar">👩‍🦰</div>
+                    <div class="speech-bubble">
+                        <div class="character-name">Lara</div>
+                        <div class="dialogue-text">
+                            Eu gostaria de saber como calcular esse <span class="highlight">ponto mais alto</span>. Ulisses, você sabe como faz?
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="thought-bubble">
+                    Como será que a matemática pode nos ajudar a descobrir a altura máxima que o projétil alcança?
+                </div>
+            </div>
+        </div>
+        
+        <!-- Página 3 -->
+        <div class="comic-page" id="page-3">
+            <div class="panel panel-large">
+                <div class="comic-sound">BINGO!</div>
+                <div class="character-scene">
+                    <div class="character-avatar ulisses-avatar">👨‍🦲</div>
+                    <div class="speech-bubble">
+                        <div class="character-name">Ulisses</div>
+                        <div class="dialogue-text">
+                            Sei sim! O ponto mais alto é o <span class="highlight">vértice da parábola</span>. Dá para calcular pela fórmula: <strong>-Δ/(4a)</strong> se estivermos usando a equação padrão.
+                       
+
+
+ </div>
+                    </div>
+                </div>
+                
+                <div class="math-display">
+                    📐 <strong>Fórmula do Vértice</strong>:<br />
+                    <span style="font-size:1.5em;">\( y_v = \frac{-Δ}{4a} \)</span><br />
+                    <small style="opacity: 0.8;">
+                        Onde <strong>a</strong> e <strong>b</strong> são os coeficientes da função quadrática.<br />
+                        Este cálculo dá o ponto mais alto (máximo) da parábola!
+                    </small>
+                </div>
+                
+                <div class="graph-container">
+                    <svg width="300" height="150">
+                        <path d="M 50 130 Q 150 50 250 130" stroke="#667eea" stroke-width="3" fill="none"/>
+                        <circle cx="150" cy="50" r="6" fill="#e74c3c"/>
+                        <line x1="150" y1="50" x2="150" y2="130" stroke="#e74c3c" stroke-width="2" stroke-dasharray="5,5"/>
+                        <text x="155" y="45" font-size="12" font-weight="bold" fill="#e74c3c">Vértice</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Página 4 -->
+        <div class="comic-page" id="page-4">
+            <div class="panel panel-large">
+                <div class="character-scene">
+                    <div class="character-avatar alicia-avatar">👩‍🦱</div>
+                    <div class="speech-bubble">
+                        <div class="character-name">Alícia</div>
+                        <div class="dialogue-text">
+                            Olhem, pessoal! Os pontos A e B nesse gráfico são as <span class="highlight">raízes da função</span> f(x) = -3x² + 105x. Ou seja, são os pontos onde o projétil toca o solo.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="math-display">
+                    🎯 NOSSA FUNÇÃO MISTERIOSA<br />
+                    f(x) = -3x² + 105x<br />
+                    <small style="opacity: 0.8;">Esta é a equação que descreve a trajetória!</small>
+                </div>
+                
+                <div class="thought-bubble">
+                    Interessante! Então essa função matemática consegue prever exatamente onde o projétil vai cair!
+                </div>
+            </div>
+        </div>
+        
+        <!-- Página 5 -->
+        <div class="comic-page" id="page-5">
+            <div class="panel panel-medium">
+                <div class="character-scene">
+                    <div class="character-avatar lara-avatar">👩‍🦰</div>
+                    <div class="speech-bubble">
+                        <div class="character-name">Lara</div>
+                        <div class="dialogue-text">
+                            Então o gráfico mostra o movimento do projétil? E esses pontos A e B são o início e o fim desse movimento?
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel panel-medium">
+                <div class="comic-sound">EXATO!</div>
+                <div class="character-scene">
+                    <div class="character-avatar ulisses-avatar">👨‍🦲</div>
+                    <div class="speech-bubble">
+                        <div class="character-name">Ulisses</div>
+                        <div class="dialogue-text">
+                            Exatamente, Lara! E para calcular os valores desses pontos, a gente pode usar a <span class="highlight">fórmula de Bhaskara</span>. Já que a função é do segundo grau, podemos encontrar as raízes assim.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="math-display">
+                    ⚡ <strong>Fórmula de Bhaskara</strong>:<br />
+                    <span style="font-size:1.5em;">\( x = \frac{-b \pm \sqrt{\Delta}}{2a} \)</span><br />
+                    <small style="opacity: 0.8;">A arma secreta para encontrar as raízes!</small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Página 6 -->
+        <div class="comic-page" id="page-6">
+            <div class="panel panel-medium">
+                <div class="explosion-effect">❓</div>
+                <div class="character-scene">
+                    <div class="character-avatar pedro-avatar">👨‍🦱</div>
+                    <div class="speech-bubble">
+                        <div class="character-name">Pedro</div>
+                        <div class="dialogue-text">
+                            Uau! E como sabemos que serão duas raízes mesmo?
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel panel-medium">
+                <div class="comic-sound">AHÁ!</div>
+                <div class="character-scene">
+                    <div class="character-avatar alicia-avatar">👩‍🦱</div>
+                    <div class="speech-bubble">
+                        <div class="character-name">Alícia</div>
+                        <div class="dialogue-text">
+                            É aí que entra o <span class="highlight">delta (Δ)</span>! Se o delta for positivo, a equação tem duas raízes reais, então teremos dois pontos: A e B. Pelo que vemos no gráfico, o delta é mesmo positivo.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="math-display">
+                    ⚡ <strong>Delta (Δ)</strong> = \( b^2 - 4ac \)<br />
+                    <small style="opacity: 0.8;">
+                        \( \Delta &gt; 0\): duas raízes reais<br />
+                        \( \Delta = 0\): uma raiz real<br />
+                        \( \Delta &lt; 0\): nenhuma raiz real
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Página 7 -->
+        <div class="comic-page" id="page-7">
+            <div class="panel panel-medium">
+                <div class="character-scene">
+                    <div class="character-avatar pedro-avatar">👨‍🦱</div>
+                    <div class="speech-bubble">
+                        <div class="character-name">Pedro</div>
+                        <div class="dialogue-text">
+                            E esse número que fica na frente do x², que no nosso caso é o "-3", tem algum nome especial?
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel panel-medium">
+                <div class="explosion-effect">📚</div>
+                <div class="character-scene">
+                    <div class="character-avatar ulisses-avatar">👨‍🦲</div>
+                    <div class="speech-bubble">
+                        <div class="character-name">Ulisses</div>
+                        <div class="dialogue-text">
+                            Tem sim! Esse número é chamado de <span class="highlight">coeficiente "a"</span>. Ele é muito importante porque determina se o gráfico da parábola é voltado para cima ou para baixo.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="graph-container">
+                    <div class="graph-title">🔄 Direção da Parábola</div>
+                    <div style="display: flex; justify-content: space-around; align-items: center;">
+                        <div style="text-align: center;">
+                            <svg width="120" height="100">
+                                <path d="M 20 80 Q 60 20 100 80" stroke="#e74c3c" stroke-width="3" fill="none"/>
+                            </svg>
+                            <div><strong>a &gt; 0</strong><br /> Para cima</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <svg width="120" height="100">
+                                <path d="M 20 20 Q 60 80 100 20" stroke="#27ae60" stroke-width="3" fill="none"/>
+                            </svg>
+                            <div><strong>a &lt; 0</strong><br /> Para baixo</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Página 8 -->
+        <div class="comic-page" id="page-8">
+            <div class="panel panel-medium">
+                <div class="character-scene">
+                    <div class="character-avatar alicia-avatar">👩‍🦱</div>
+                    <div class="speech-bubble">
+                        <div class="character-name">Alícia</div>
+                        <div class="dialogue-text">
+                            Exato, Pedro. Como o "a" aqui é negativo, nossa parábola é voltada para baixo. Se fosse positivo, ela abriria para cima, como um copo.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel panel-large">
+                <div class="comic-sound">RESOLVIDO!</div>
+                <div class="character-scene">
+                    <div class="character-avatar ulisses-avatar">👨‍🦲</div>
+                    <div class="speech-bubble">
+                        <div class="character-name">Ulisses</div>
+                        <div class="dialogue-text">
+                            Isso mesmo! O gráfico dessa função é chamado de <span class="highlight">parábola</span>. Toda função do segundo grau tem um gráfico em forma de parábola.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="math-display" style="background: linear-gradient(135deg, #f1c40f, #f39c12); color: #2c3e50;">
+                    🎉 CASO RESOLVIDO! 🎉<br />
+                    <strong>FUNÇÃO QUADRÁTICA = PARÁBOLA</strong><br />
+                    <small>Os detetives desvendaram todos os segredos!</small>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <div style="font-size: 3em; margin: 10px 0;">🕵️‍♀️🕵️‍♂️🕵️‍♀️🕵️‍♂️</div>
+                    <div style="font-size: 1.2em; color: #27ae60; font-weight: bold;">
+                        Parabéns! Vocês descobriram todos os segredos da função quadrática!
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <button class="nav-button" id="prev-btn" onclick="previousPage()" disabled>
+                ⬅️ Página Anterior
+            </button>
+            
+            <div class="page-indicator">
+                <span id="page-display">1 / 8</span>
+            </div>
+            
+            <button class="nav-button" id="next-btn" onclick="nextPage()">
+                Próxima Página ➡️
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        let currentPage = 0;
+        const totalPages = 8;
+        
+        function updateDisplay() {
+            // Esconder todas as páginas
+            for (let i = 0; i <= totalPages; i++) {
+                const page = document.getElementById(`page-${i}`);
+                if (page) {
+                    page.classList.remove('active');
+                }
+            }
+            
+            // Mostrar página atual
+            document.getElementById(`page-${currentPage}`).classList.add('active');
+            
+            // Atualizar contadores
+            document.getElementById('current-page').textContent = currentPage;
+            document.getElementById('page-display').textContent = `${currentPage} / ${totalPages}`;
+            
+            // Atualizar botões
+            document.getElementById('prev-btn').disabled = currentPage === 0;
+            document.getElementById('next-btn').disabled = currentPage === totalPages;
+            
+            // Mudar texto dos botões
+            if (currentPage === 0) {
+                document.getElementById('prev-btn').textContent = '🏠 Início';
+                document.getElementById('next-btn').textContent = '📖 Começar História ➡️';
+            } else if (currentPage === totalPages) {
+                document.getElementById('next-btn').textContent = '🎉 Fim da História!';
+                document.getElementById('prev-btn').textContent = '⬅️ Página Anterior';
+            } else {
+                document.getElementById('next-btn').textContent = 'Próxima Página ➡️';
+                document.getElementById('prev-btn').textContent = '⬅️ Página Anterior';
+            }
+        }
+        
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                updateDisplay();
+            }
+        }
+        
+        function previousPage() {
+            if (currentPage > 0) {
+                currentPage--;
+                updateDisplay();
+            }
+        }
+        
+        // Navegação por teclado
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight' || event.key === ' ') {
+                event.preventDefault();
+                nextPage();
+            } else if (event.key === 'ArrowLeft') {
+                event.preventDefault();
+                previousPage();
+            }
+        });
+        
+        // Navegação por toque (mobile)
+        let startX = 0;
+        let endX = 0;
+        
+        document.addEventListener('touchstart', function(event) {
+            startX = event.touches[0].clientX;
+        });
+        
+        document.addEventListener('touchend', function(event) {
+            endX = event.changedTouches.clientX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const threshold = 50;
+            const diff = startX - endX;
+            
+            if (Math.abs(diff) > threshold) {
+                if (diff > 0) {
+                    // Swipe left - next page
+                    nextPage();
+                } else {
+                    // Swipe right - previous page
+                    previousPage();
+                }
+            }
+        }
+        
+        // Inicializar
+        updateDisplay();
+        
+        // Efeito de som ao virar página
+        function playPageSound() {
+            // Simular som de virar página com vibração (se disponível)
+            if (navigator.vibrate) {
+                navigator.vibrate(50);
+            }
+        }
+        
+        // Adicionar som aos botões
+        document.getElementById('next-btn').addEventListener('click', playPageSound);
+        document.getElementById('prev-btn').addEventListener('click', playPageSound);
+    </script>
+</body>
+</html>

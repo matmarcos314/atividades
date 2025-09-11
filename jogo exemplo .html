@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Documento A4 com 10 Cartões por Folha - Retângulos Menores Mantidos</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f0f0f0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+    }
+    .a4-container {
+        width: 210mm;
+        background: white;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+    .a4-page {
+        width: 210mm;
+        height: 297mm;
+        padding: 9mm 5.5mm 5.5mm 5.5mm;
+        position: relative;
+        box-sizing: border-box;
+        page-break-after: always;
+        background-color: white;
+    }
+    .a4-page:last-child { page-break-after: auto; }
+
+    /* Retângulo maior (cartão) */
+    .rectangle-container {
+        position: absolute;
+        width: 99mm;
+        height: 55mm;
+        background-color: white;
+        border: 0.75mm solid #000;
+    }
+    /* Retângulo menor (caixa de nome) */
+    .name-container {
+        position: absolute;
+        width: 74.261mm;
+        height: 9.8888mm;
+        background-color: white;
+        border: 0.75mm solid #000;
+        border-radius: 2.2mm;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow-wrap: break-word;
+        padding: 0 3px;
+        text-align: center;
+    }
+    .name-text {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4.4mm;
+        font-weight: bold;
+        line-height: 9.8888mm;
+        font-family: 'Times New Roman', Times, serif;
+        color: #000;
+        letter-spacing: 0.33mm;
+        text-align: center;
+        word-break: break-word;
+    }
+
+    /* Posicionamento dos 10 cartões - 2 colunas x 5 linhas */
+    /* Coluna 1 - retângulos maiores */
+    .rect-1-1 { top: 5.5mm; left: 5.5mm; }
+    .rect-2-1 { top: 65.5mm; left: 5.5mm; }
+    .rect-3-1 { top: 125.5mm; left: 5.5mm; }
+    .rect-4-1 { top: 185.5mm; left: 5.5mm; }
+    .rect-5-1 { top: 245.5mm; left: 5.5mm; }
+    /* Coluna 1 - retângulos menores (caixas de nome) */
+    .name-1-1 { top: 45.8mm; left: 17.875mm; }
+    .name-2-1 { top: 105.8mm; left: 17.875mm; }
+    .name-3-1 { top: 165.8mm; left: 17.875mm; }
+    .name-4-1 { top: 225.8mm; left: 17.875mm; }
+    .name-5-1 { top: 285.8mm; left: 17.875mm; }
+
+    /* Coluna 2 - retângulos maiores */
+    .rect-1-2 { top: 5.5mm; left: 106.5mm; }
+    .rect-2-2 { top: 65.5mm; left: 106.5mm; }
+    .rect-3-2 { top: 125.5mm; left: 106.5mm; }
+    .rect-4-2 { top: 185.5mm; left: 106.5mm; }
+    .rect-5-2 { top: 245.5mm; left: 106.5mm; }
+    /* Coluna 2 - retângulos menores (caixas de nome) */
+    .name-1-2 { top: 45.8mm; left: 118.875mm; }
+    .name-2-2 { top: 105.8mm; left: 118.875mm; }
+    .name-3-2 { top: 165.8mm; left: 118.875mm; }
+    .name-4-2 { top: 225.8mm; left: 118.875mm; }
+    .name-5-2 { top: 285.8mm; left: 118.875mm; }
+
+    /* Botões e containers */
+    .print-button {
+        margin-bottom: 10px;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 6px;
+        border: none;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 2px 10px rgba(52,152,219,0.3);
+        transition: all 0.3s ease;
+        z-index: 10000;
+    }
+    .print-button:hover {
+        background: #2980b9;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(52,152,219,0.4);
+    }
+    .upload-container {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        max-width: 300px;
+        z-index: 10000;
+    }
+    .upload-button, .apply-button {
+        width: 100%;
+        padding: 10px 15px;
+        border-radius: 6px;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+    }
+    .upload-button { background: #27ae60; color: white; }
+    .upload-button:hover { background: #219a52; }
+    .apply-button { background: #e74c3c; color: white; }
+    .apply-button:hover { background: #c0392b; }
+    #nameInput {
+        width: 300px;
+        min-height: 100px;
+        border-radius: 6px;
+        border: 2px solid #ddd;
+        padding: 10px;
+        font-size: 14px;
+        resize: vertical;
+        margin-bottom: 10px;
+        font-family: Arial, sans-serif;
+        white-space: pre-wrap;
+    }
+    .fill-button {
+        width: 300px;
+        background: #2980b9;
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+        box-shadow: 0 2px 10px rgba(41,128,185,0.3);
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+    }
+    .fill-button:hover {
+        background: #1c5d83;
+        box-shadow: 0 4px 15px rgba(41,128,185,0.4);
+    }
+    .image-preview {
+        margin: 10px 0;
+        text-align: center;
+    }
+    .image-preview img {
+        max-width: 100%;
+        max-height: 100px;
+        border-radius: 5px;
+        border: 2px solid #ddd;
+    }
+    .preview-text {
+        font-size: 12px;
+        color: #7f8c8d;
+        margin-top: 5px;
+    }
+    @media print {
+        body { background: white; padding: 0; margin: 0; }
+        .a4-container { width: 210mm; height: auto; box-shadow: none; border-radius: 0; margin: 0; }
+        .a4-page { box-shadow: none; border-radius: 0; page-break-after: always; }
+        .a4-page:last-child { page-break-after: auto; }
+        .print-button, .upload-container, #nameInput, .fill-button { display: none; }
+        @page { size: A4; margin: 5mm; }
+        * { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }
+        .rectangle-container, .name-container { position: absolute !important; display: block !important; margin: 0; }
+        .name-text {
+            width: 100% !important;
+            height: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 4.4mm !important;
+            font-weight: bold !important;
+            line-height: 9.8888mm !important;
+            font-family: 'Times New Roman', Times, serif !important;
+            color: #000 !important;
+            letter-spacing: 0.33mm !important;
+            text-align: center !important;
+            word-break: break-word !important;
+        }
+    }
+    @media (max-width: 768px) {
+        body { padding: 10px; }
+        .a4-container { width: 100%; min-height: 100vh; }
+        .a4-page { padding: 20px; }
+        #nameInput, .fill-button { width: 100%; }
+    }
+</style>
+</head>
+<body>
+
+<button class="print-button" onclick="printDocument()">🖨️ Imprimir A4</button>
+<textarea id="nameInput" placeholder="Cole aqui os nomes, um por linha..."></textarea>
+<button class="fill-button" onclick="fillCards()">Preencher Cartões</button>
+
+<div class="upload-container">
+    <input type="file" id="imageUpload" accept="image/*" style="display:none" />
+    <button class="upload-button" onclick="document.getElementById('imageUpload').click()">📂 Escolher Imagem</button>
+    <div id="imagePreview" class="image-preview"></div>
+    <button id="applyButton" class="apply-button" style="display:none" onclick="applyImageToRectangles()">✅ Aplicar nos Retângulos</button>
+</div>
+
+<div class="a4-container">
+    <!-- 4 páginas A4, cada com 10 cartões mantendo retângulos menores -->
+    <div class="a4-page">
+        <div class="rectangle-container rect-1-1"></div><div class="name-container name-1-1"><span class="name-text"></span></div>
+        <div class="rectangle-container rect-1-2"></div><div class="name-container name-1-2"><span class="name-text"></span></div>
+
+        <div class="rectangle-container rect-2-1"></div><div class="name-container name-2-1"><span class="name-text"></span></div>
+        <div class="rectangle-container rect-2-2"></div><div class="name-container name-2-2"><span class="name-text"></span></div>
+
+        <div class="rectangle-container rect-3-1"></div><div class="name-container name-3-1"><span class="name-text"></span></div>
+        <div class="rectangle-container rect-3-2"></div><div class="name-container name-3-2"><span class="name-text"></span></div>
+
+        <div class="rectangle-container rect-4-1"></div><div class="name-container name-4-1"><span class="name-text"></span></div>
+        <div class="rectangle-container rect-4-2"></div><div class="name-container name-4-2"><span class="name-text"></span></div>
+
+        <div class="rectangle-container rect-5-1"></div><div class="name-container name-5-1"><span class="name-text"></span></div>
+        <div class="rectangle-container rect-5-2"></div><div class="name-container name-5-2"><span class="name-text"></span></div>
+    </div>
+
+    <div class="a4-page">
+        <div class="rectangle-container rect-1-1"></div><div class="name-container name-1-1"><span class="name-text"></span></div>
+        <div class="rectangle-container rect-1-2"></div><div class="name-container name-1-2"><span class="name-text"></span></div>
+
+        <div class="rectangle-container rect-2-1"></div><div class="name-container name-2-1"><span class="name-text"></span></div>
+        <div class="rectangle-container rect-2-2"></div><div class="name-container name-2-2"><span class="name-text"></span></div>
+
+        <div class="rectangle-container rect-3-1"></div><div class="name-container name-3-1"><span class="name-text"></span></div>
+        <div class="rectangle-container rect-3-2"></div><div class="name-container name-3-2"><span class="name-text"></span></div>
+
+        <div class="rectangle-container rect-4-1"></div><div class="name-container name-4-1"><span class="name-text"></span></div>
+        <div class="rectangle-container rect-4-2"></div><div class="name-container name-4-2"><span class="name-text"></span></div>
+
+        <div class="rectangle-container rect-5-1"></div><div class="name-container name-5-1"><span class="name-text"></span></div>
+        <div class="rectangle-container rect-5-2"></div><div class="name-container name-5-2"><span class="name-text"></span></div>
+    </div>
+
+    <div class="a4-page">
+        <div class="rectangle-container rect-1-1"></div><div class="name-container name-1-1"><span class="name-text"></span></div>
+        <div class="rectangle-container rect-1-2"></div><div class="name-container name-1-2"><span class="name-text"></span></div>
+
+        <div class="rectangle-container rect-2-1"></div><div class="name-container name-2-1"><span class="name-text"></span></div>
+        <div class="rectangle-container rect-2-2"></div><div class="name-container name-2-2"><span class="name-text"></span></div>
+
+        <div class="rectangle-container rect-3-1"></div><div class="name-container name-3-1"><span class="name-text"></span></div>
+        <div class="rectangle-container rect-3-2"></div><div class="name-container name-3-2"><span class="name-text"></span></div>
+
+        <div class="rectangle-container rect-4-1"></div><div class="name-container name-4-1"><span class="name-text"></span></div>
+        <div class="rectangle-container rect-4-2"></div><div class="name-container name-4-2"><span class="name-text"></span></div>
+
+        <div class="rectangle-container rect-5-1"></div><div class="name-container name-5-1"><span class="name-text"></span></div>
+        <div class="rectangle-container rect-5-2"></div><div class="name-container name-5-2"><span class="name-text"></span></div>
+    </div>
+
+    <div class="a4-page">
+        <div class="rectangle-container rect-1-1"></div><div class="name-container name-1-1"><span class="name-text"></span></div>
+        <div class="rectangle-container rect-1-2"></div><div class="name-container name-1-2"><span class="name-text"></span></div>
+
+        <div class="rectangle-container rect-2-1"></div><div class="name-container name-2-1"><span class="name-text"></span></div>
+        <div class="rectangle-container rect-2-2"></div><div class="name-container name-2-2"><span class="name-text"></span></div>
+
+        <div class="rectangle-container rect-3-1"></div><div class="name-container name-3-1"><span class="name-text"></span></div>
+        <div class="rectangle-container rect-3-2"></div><div class="name-container name-3-2"><span class="name-text"></span></div>
+
+        <div class="rectangle-container rect-4-1"></div><div class="name-container name-4-1"><span class="name-text"></span></div>
+        <div class="rectangle-container rect-4-2"></div><div class="name-container name-4-2"><span class="name-text"></span></div>
+
+        <div class="rectangle-container rect-5-1"></div><div class="name-container name-5-1"><span class="name-text"></span></div>
+        <div class="rectangle-container rect-5-2"></div><div class="name-container name-5-2"><span class="name-text"></span></div>
+    </div>
+</div>
+
+<script>
+function printDocument() {
+    document.querySelector('.upload-container').style.display = 'none';
+    document.querySelector('.print-button').style.display = 'none';
+    document.getElementById('nameInput').style.display = 'none';
+    document.querySelector('.fill-button').style.display = 'none';
+    window.print();
+    setTimeout(() => {
+        document.querySelector('.upload-container').style.display = 'block';
+        document.querySelector('.print-button').style.display = 'block';
+        document.getElementById('nameInput').style.display = 'block';
+        document.querySelector('.fill-button').style.display = 'block';
+    }, 1000);
+}
+
+let selectedImageData = null;
+document.getElementById('imageUpload').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            selectedImageData = e.target.result;
+            document.getElementById('imagePreview').innerHTML = `<img src="${selectedImageData}" alt="Preview"/><div class="preview-text">Imagem carregada com sucesso!</div>`;
+            document.getElementById('applyButton').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+function applyImageToRectangles() {
+    if (selectedImageData) {
+        document.querySelectorAll('.rectangle-container').forEach(rect => {
+            rect.style.backgroundImage = `url(${selectedImageData})`;
+            rect.style.backgroundSize = '99mm 55mm';
+            rect.style.backgroundRepeat = 'no-repeat';
+            rect.style.backgroundPosition = 'center center';
+        });
+        document.getElementById('applyButton').style.display = 'none';
+    }
+}
+
+// Função para extrair primeiro e último nome, eliminando números e traços no início
+function processLine(line) {
+    line = line.replace(/^\d+\s*[-–]\s*/, ''); // remove número e traço iniciais
+    const parts = line.split(/\s+/);
+    if(parts.length === 0) return '';
+    if(parts.length === 1) return parts[0];
+    return parts[0] + ' ' + parts[parts.length - 1];
+}
+
+function fillCards() {
+    const input = document.getElementById('nameInput').value.trim();
+    const lines = input.split('\n').map(n => n.trim()).filter(n => n.length > 0);
+    const nameSpans = document.querySelectorAll('.name-text');
+    for (let i = 0; i < nameSpans.length; i++) {
+        if (i < lines.length) {
+            const shortName = processLine(lines[i]);
+            nameSpans[i].textContent = shortName;
+        } else {
+            nameSpans[i].textContent = '';
+        }
+    }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <title>Escolher 6 números e comparar</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f6fafd;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    /* Botão Tela Cheia */
+    .fullscreen-btn {
+      position: fixed;
+      top: 14px;
+      right: 24px;
+      z-index: 3000;
+      background: #5b7fa6;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-size: 1em;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 10px #b3d0ef2c;
+      transition: background 0.2s;
+    }
+    .fullscreen-btn:hover {
+      background: #3875cd;
+    }
+    /* Box lateral esquerda com as imagens empilhadas */
+    .imagem-lateral-box {
+      position: fixed;
+      left: 20%;
+      top: 10%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1000;
+      gap: 32px; /* Espaço entre imagens */
+    }
+    .imagem-lateral {
+      width: 220px;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      transition: box-shadow 0.3s;
+      cursor: pointer;
+      background: #fff;
+      margin: 0;
+      padding: 0;
+      display: block;
+    }
+    .imagem-lateral:hover {
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    }
+    h2 {
+      color: #437dae;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .painel-wrapper {
+      position: relative;
+      display: inline-block;
+      min-width: 335px;
+      min-height: 380px;
+      margin-bottom: 28px;
+    }
+    .painel-numeros {
+      display: flex;
+      flex-wrap: wrap;
+      max-width: 420px;
+      gap: 8px;
+      justify-content: center;
+      background: transparent;
+      z-index: 1;
+      position: relative;
+    }
+    .numero {
+      width: 48px;
+      height: 48px;
+      line-height: 48px;
+      text-align: center;
+      border-radius: 8px;
+      background: #e6eefb;
+      color: #437dae;
+      font-size: 1.2em;
+      font-weight: bold;
+      cursor: pointer;
+      border: 2px solid #b2cee7;
+      transition: background 0.2s, border 0.2s, color 0.2s;
+      user-select: none;
+    }
+    .numero.marcado {
+      background: #90cdf4;
+      color: #fff;
+      border: 2px solid #69b5e2;
+    }
+    .resultado-absolute {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
+      min-width: 330px;
+      max-width: 440px;
+      z-index: 20;
+      pointer-events: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .resultado-msg {
+      font-size: 2.2em;
+      font-weight: bold;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 6px 32px #2455702a;
+      padding: 22px 30px;
+      background: #fff;
+      animation: pisca 1s linear infinite alternate;
+      border: 4px solid #90cdf4;
+      color: #246e52;
+      min-width: 320px;
+      max-width: 90vw;
+      display: inline-block;
+      pointer-events: none;
+    }
+    .resultado-msg.parabens {
+      color: #18893E;
+      border-color: #25d366;
+      background: #eafcf2;
+    }
+    .resultado-msg.erro {
+      color: #d66236;
+      border-color: #f6b38c;
+      background: #fff4f0;
+    }
+    @keyframes pisca {
+      0% { opacity: 1; }
+      50% { opacity: 0.35; }
+      100% {opacity: 1;}
+    }
+    .botoes {
+      margin: 20px 0 10px 0;
+      text-align: center;
+    }
+    .botoes button {
+      background: #5b7fa6;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 24px;
+      font-size: 1em;
+      cursor: pointer;
+      margin: 0 12px;
+      font-weight: 600;
+      transition: background 0.2s;
+      user-select: none;
+    }
+    .botoes button:hover {
+      background: #3875cd;
+    }
+    @media (max-width: 900px) {
+      .imagem-lateral-box { left: 2%; top: 7%; }
+      .imagem-lateral { width: 120px; }
+      .painel-wrapper { min-width: 190px; }
+      .painel-numeros { max-width: 95vw; }
+      .resultado-msg { font-size: 1.10em; min-width: 110px; padding: 9px 2vw; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Botão de Tela Cheia -->
+  <button class="fullscreen-btn" id="btnTelaCheia">Tela Cheia</button>
+
+  <!-- Box lateral esquerda com as três imagens -->
+  <div class="imagem-lateral-box">
+    <img src="03.png" alt="Logo do curso à esquerda" class="imagem-lateral" />
+    <img src="logba.png" alt="Logo BA" class="imagem-lateral" />
+    <img src="nte11.png" alt="NT11" class="imagem-lateral" />
+  </div>
+
+  <h2>Escolha <b>exatamente 6</b> números</h2>
+  <div class="painel-wrapper">
+    <div id="resultado" class="resultado-absolute"></div>
+    <div class="painel-numeros" id="painelNumeros"></div>
+  </div>
+  <div class="botoes">
+    <button onclick="compararNumeros()">Verificar</button>
+    <button onclick="limparSelecao()">Limpar</button>
+  </div>
+
+  <script>
+    // Botão Tela Cheia
+    document.getElementById('btnTelaCheia').addEventListener('click', function() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    });
+
+    const preConfigurados = [1, 25, 26, 42, 49, 59];
+    const painel = document.getElementById('painelNumeros');
+    for (let i = 1; i <= 60; i++) {
+      const num = document.createElement('div');
+      num.textContent = i.toString().padStart(2, '0');
+      num.className = 'numero';
+      num.onclick = function() {
+        const marcados = document.querySelectorAll('.numero.marcado').length;
+        if (num.classList.contains('marcado')) {
+          num.classList.remove('marcado');
+        } else {
+          if (marcados >= 6) {
+            alert('Você só pode marcar 6 números.');
+            return;
+          }
+          num.classList.add('marcado');
+        }
+      };
+      painel.appendChild(num);
+    }
+
+    function compararNumeros() {
+      const nums = document.getElementsByClassName('numero');
+      let marcados = [];
+      for(let n of nums) {
+        n.classList.remove('correto');
+      }
+      for(let n of nums) {
+        if(n.classList.contains('marcado')) {
+          marcados.push(parseInt(n.textContent, 10));
+        }
+      }
+      if (marcados.length !== 6) {
+        alert('Você precisa escolher exatamente 6 números!');
+        return;
+      }
+      marcados.sort((a,b)=>a-b);
+      const referencia = [...preConfigurados].sort((a,b)=>a-b);
+      const todosCertos = marcados.every((v,i) => v === referencia[i]);
+      const res = document.getElementById('resultado');
+      res.innerHTML = '';
+      const msg = document.createElement('span');
+      msg.className = 'resultado-msg' + (todosCertos ? ' parabens' : ' erro');
+      msg.innerHTML = todosCertos
+        ? 'PARABÉNS, você acertou todos os números!'
+        : 'Você não acertou todos os números.';
+      res.appendChild(msg);
+    }
+
+    function limparSelecao() {
+      const nums = document.getElementsByClassName('numero');
+      for(let n of nums) {
+        n.classList.remove('marcado', 'correto');
+      }
+      const res = document.getElementById('resultado');
+      res.innerHTML = '';
+    }
+  </script>
+
+</body>
+</html>

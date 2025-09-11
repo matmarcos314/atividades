@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <title>Dia do Estudante - Início</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f7fafc 0%, #d9e2ec 100%);
+      color: #354865;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .main-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      min-height: 65vh;
+      width: 100%;
+      gap: 68px;
+      margin-top: 12px;
+    }
+    .imagens-coluna {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 38px;
+    }
+    .imagens-coluna img {
+      width: 220px;
+      min-width: 160px;
+      height: auto;
+      border-radius: 18px;
+      box-shadow: 0 7px 25px rgba(30,38,110,0.13);
+      background: #fff;
+      transition: transform 0.22s, box-shadow 0.22s;
+      margin: 0 auto;
+      display: block;
+    }
+    .imagens-coluna img:hover {
+      transform: scale(1.07);
+      box-shadow: 0 14px 40px rgba(34,78,141,0.17);
+    }
+    .botoes-coluna {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 38px;
+      min-width: 310px;
+    }
+    .btn-pagina {
+      display: inline-block;
+      width: 310px;
+      padding: 28px 0;
+      font-size: 1.55rem;
+      letter-spacing: 0.01em;
+      font-weight: 700;
+      text-align: center;
+      text-decoration: none;
+      color: #203347;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(60, 80, 130, 0.12);
+      outline: none;
+      user-select: none;
+      position: relative;
+      background: #e2e2e2;
+      transition: transform 0.23s, box-shadow 0.20s, color 0.18s;
+    }
+    .btn-choc { background: linear-gradient(90deg,#F39237 40%, #FFB44A 100%);}
+    .btn-mario { background: linear-gradient(90deg,#53B3CB 40%, #4B93BD 100%);}
+    .btn-forca { background: linear-gradient(90deg,#7dcf7d 30%, #37a055 100%);}
+    .btn-pagina:hover, .btn-pagina:focus {
+      transform: scale(1.08);
+      box-shadow: 0 14px 38px rgba(42,98,170,0.17);
+      color: #1e232f;
+    }
+    .titulo-estudante {
+      font-size: 3.4rem;
+      margin-bottom: 30px;
+      margin-top: 30px;
+      font-weight: 800;
+      background: linear-gradient(90deg,#6bb9f7 30%, #4edea8 60%, #ffbe6b 95%);
+      color: #20406a;
+      text-shadow: 1.5px 1.5px 0 #e0e6ea4f, 0.5px 0.5px 2px #fff;
+      border-radius: 19px;
+      padding: 18px 72px 17px 72px;
+      display: inline-block;
+      box-shadow: 0 3px 25px 0 rgba(75, 102, 155, 0.13);
+      letter-spacing: 0.01em;
+      text-align: center;
+    }
+    @media (max-width: 890px) {
+      .main-container { flex-direction: column; gap: 18px; }
+      .botoes-coluna { min-width: 0; width: 100%; align-items: center; }
+      .btn-pagina { width: 94vw; max-width: 390px; }
+      .imagens-coluna img { width: 140px; }
+      .titulo-estudante { font-size: 2.1rem; padding: 13px 6vw; }
+    }
+    @media (max-width: 450px) {
+      .titulo-estudante { font-size: 1.38rem; padding: 7px 2vw; }
+      .imagens-coluna img { width: 60px; }
+      .btn-pagina { font-size: 1rem; padding: 13px 0; min-width: 0; width: 97vw;}
+    }
+  </style>
+</head>
+<body>
+  <div class="titulo-estudante">
+    Dia do Estudante
+  </div>
+
+  <div class="main-container">
+    <div class="imagens-coluna" aria-label="Imagens do evento">
+      <img src="03.png" alt="Imagem 1 do evento Dia do Estudante" />
+      <img src="logba.png" alt="Logo BA da comemoração" />
+      <img src="nte11.png" alt="Imagem NT11 relacionada ao evento" />
+    </div>
+    <nav class="botoes-coluna" aria-label="Navegação principal">
+      <a href="file:///C:/Users/rafa_/OneDrive/%C3%81rea%20de%20Trabalho/Curso/DEP/chocoloteria.html" 
+         class="btn-pagina btn-choc" id="btnChoc" role="button">Chocoloteria</a>
+      <a href="https://scratch.mit.edu/projects/1152772444/fullscreen/" class="btn-pagina btn-mario" id="btnMario" role="button">Jogo do Mario</a>
+      <a href="file:///C:/Users/rafa_/OneDrive/%C3%81rea%20de%20Trabalho/Curso/DEP/JOGO%20DA%20FORCA.html" 
+         class="btn-pagina btn-forca" id="btnForca" role="button">Jogo da Forca</a>
+    </nav>
+  </div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trilha de Potenciação</title>
+    <link rel="stylesheet" href="css/style.css"> <!-- Link para o CSS -->
+</head>
+<body>
+    <header>
+        <h1>Bem-vindo à Trilha de Potenciação</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="introducao.html">Introdução</a></li>
+            <li><a href="propriedades.html">Propriedades</a></li>
+            <li><a href="exemplos.html">Exemplos Práticos</a></li>
+            <li><a href="exercicios.html">Exercícios</a></li>
+        </ul>
+    </nav>
+    <main>
+        <h2>Comece sua jornada no mundo da potenciação!</h2>
+        <p>Nesta trilha, você aprenderá os conceitos básicos, suas propriedades e como aplicá-los em diferentes situações.</p>
+    </main>
+    <footer>
+        <p>© 2025 Sua Plataforma de Ensino</p>
+    </footer>
+</body>
+</html>

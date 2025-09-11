@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Escola Municipal José Cardoso de Lima</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: white;
+        }
+        .screen {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            text-align: center;
+            color: #333;
+        }
+        .screen.active {
+            display: block;
+        }
+        h1 {
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            color: #333;
+            line-height: 1.2;
+        }
+        h2 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            color: #555;
+        }
+        .input-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid #e9ecef;
+        }
+        .coordinate-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .coordinate-input {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+        }
+        .coordinate-input h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 1.2rem;
+        }
+        .input-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .input-row label {
+            font-weight: bold;
+            min-width: 20px;
+        }
+        .input-row input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            text-align: center;
+        }
+        .input-row input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        .btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .btn.secondary {
+            background: #2196F3;
+        }
+        .btn.secondary:hover {
+            background: #1976D2;
+        }
+        .btn.danger {
+            background: #f44336;
+        }
+        .btn.danger:hover {
+            background: #d32f2f;
+        }
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .mission-info {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid #2196F3;
+        }
+        .cartesian-plane {
+            width: 600px;
+            height: 600px;
+            position: relative;
+            background: white;
+            border: 2px solid #333;
+            margin: 20px auto;
+        }
+        .grid-line {
+            position: absolute;
+            background: #e0e0e0;
+        }
+        .grid-line.vertical {
+            width: 1px;
+            height: 100%;
+        }
+        .grid-line.horizontal {
+            width: 100%;
+            height: 1px;
+        }
+        .axis {
+            position: absolute;
+            background: #333;
+            z-index: 2;
+        }
+        .axis.x-axis {
+            width: 100%;
+            height: 2px;
+            top: 50%;
+            left: 0;
+        }
+        .axis.y-axis {
+            width: 2px;
+            height: 100%;
+            left: 50%;
+            top: 0;
+        }
+        .axis-label {
+            position: absolute;
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+            z-index: 3;
+        }
+        .number-label {
+            position: absolute;
+            font-size: 12px;
+            color: #666;
+            z-index: 3;
+        }
+        .drone {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            z-index: 10;
+            transform: translate(-50%, -50%);
+            transition: all 2s ease-in-out;
+        }
+        .drone svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        }
+        .propeller {
+            animation: spin 0.5s linear infinite;
+            transform-origin: center;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.2; }
+            100% { opacity: 1; }
+        }
+        .blink {
+            animation: blink 1s infinite;
+        }
+        .trajectory-line {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(90deg, #4CAF50, #2196F3);
+            z-index: 5;
+            border-radius: 2px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transform-origin: left center;
+        }
+        .waypoint {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            z-index: 8;
+            transform: translate(-50%, -50%);
+            border: 3px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .waypoint.start {
+            background: #4CAF50;
+        }
+        .waypoint.middle {
+            background: #FF9800;
+        }
+        .waypoint.end {
+            background: #f44336;
+        }
+        .coordinate-line {
+            position: absolute;
+            z-index: 6;
+            border: 1px dashed #666;
+            opacity: 0.7;
+        }
+        .coordinate-line.vertical {
+            width: 0;
+            border-left: 2px dashed #666;
+        }
+        .coordinate-line.horizontal {
+            height: 0;
+            border-top: 2px dashed #666;
+        }
+        .status-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: 2px solid #e9ecef;
+        }
+        .quadrant-label {
+            position: absolute;
+            font-size: 16px;
+            font-weight: bold;
+            color: #666;
+            z-index: 1;
+        }
+        .controls {
+            position: fixed;
+            left: 2%;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 100;
+        }
+        .controls .btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0;
+        }
+        @media (max-width: 768px) {
+            .cartesian-plane {
+                width: 400px;
+                height: 400px;
+            }
+            .coordinate-group {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .screen {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            .controls {
+                left: 2%;
+            }
+            .controls .btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+        }
+        /* Novo botão lateral direito */
+        #advanceButton {
+            position: fixed;
+            top: 50%;
+            right: 2%;
+            transform: translateY(-50%);
+            z-index: 110;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        #advanceButton:hover {
+            background: #45a049;
+            transform: translateY(-50%) translateX(5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body>
+    <!-- Tela 1: Configuração da Missão -->
+    <div class="screen active" id="configScreen">
+        <h1>🏫 Formação Fundamental II</h1>
+        <div class="input-section">
+            <h2>📍 Configurar Trajetória</h2>
+            <div class="commander-section">
+                <h3>👨‍✈️ Nome do Comandante</h3>
+                <input type="text" id="commanderName" placeholder="Digite seu nome" maxlength="15" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; text-align: center; margin-bottom: 20px;">
+            </div>
+            <div class="coordinate-group">
+                <div class="coordinate-input">
+                    <h3>🟢 Coordenada Inicial</h3>
+                    <div class="input-row">
+                        <label>X:</label>
+                        <input type="number" id="startX" min="-10" max="10" value="0" placeholder="Ex: -5" />
+                    </div>
+                    <br />
+                    <div class="input-row">
+                        <label>Y:</label>
+                        <input type="number" id="startY" min="-10" max="10" value="0" placeholder="Ex: 3" />
+                    </div>
+                </div>
+                <div class="coordinate-input">
+                    <h3>🔴 Coordenada Final</h3>
+                    <div class="input-row">
+                        <label>X:</label>
+                        <input type="number" id="endX" min="-10" max="10" value="5" placeholder="Ex: 8" />
+                    </div>
+                    <br />
+                    <div class="input-row">
+                        <label>Y:</label>
+                        <input type="number" id="endY" min="-10" max="10" value="3" placeholder="Ex: -2" />
+                    </div>
+                </div>
+            </div>
+            <button class="btn" onclick="startMission()">🚀 Iniciar Missão</button>
+        </div>
+        <div style="background: #fff3cd; padding: 15px; border-radius: 10px; border: 2px solid #ffc107; color: #856404;">
+            <strong>📋 Instruções:</strong><br />
+            • Digite as coordenadas de início e fim (valores entre -10 e 10)<br />
+            • O drone se moverá automaticamente pela trajetória<br />
+            • Parará no ponto médio aguardando comando para continuar
+        </div>
+    </div>
+    <!-- Tela 2: Execução da Missão -->
+    <div class="screen" id="missionScreen">
+        <h1>🏫 Escola M. José Cardoso de Lima - Missão em Andamento</h1>
+        <div class="cartesian-plane" id="cartesianPlane">
+            <div class="axis x-axis"></div>
+            <div class="axis y-axis"></div>
+            <div class="axis-label" style="right: 10px; top: calc(50% - 20px)">X</div>
+            <div class="axis-label" style="left: calc(50% + 10px); top: 10px">Y</div>
+            <div class="quadrant-label" style="top: 20px; right: 20px">I</div>
+            <div class="quadrant-label" style="top: 20px; left: 20px">II</div>
+            <div class="quadrant-label" style="bottom: 20px; left: 20px">III</div>
+            <div class="quadrant-label" style="bottom: 20px; right: 20px">IV</div>
+            <div class="trajectory-line" id="trajectoryLine"></div>
+            <div class="waypoint start" id="startPoint"></div>
+            <div class="waypoint middle" id="middlePoint"></div>
+            <div class="waypoint end" id="endPoint"></div>
+            <div class="drone" id="drone">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse cx="50" cy="50" rx="25" ry="15" fill="#2196F3" stroke="#1976D2" stroke-width="2" />
+                    <g class="propeller">
+                        <circle cx="25" cy="25" r="12" fill="#64B5F6" stroke="#1976D2" stroke-width="2" opacity="0.8" />
+                        <ellipse cx="25" cy="25" rx="10" ry="3" fill="#1976D2" opacity="0.7" />
+                        <ellipse cx="25" cy="25" rx="3" ry="10" fill="#1976D2" opacity="0.7" />
+                    </g>
+                    <g class="propeller">
+                        <circle cx="75" cy="25" r="12" fill="#64B5F6" stroke="#1976D2" stroke-width="2" opacity="0.8" />
+                        <ellipse cx="75" cy="25" rx="10" ry="3" fill="#1976D2" opacity="0.7" />
+                        <ellipse cx="75" cy="25" rx="3" ry="10" fill="#1976D2" opacity="0.7" />
+                    </g>
+                    <g class="propeller">
+                        <circle cx="25" cy="75" r="12" fill="#64B5F6" stroke="#1976D2" stroke-width="2" opacity="0.8" />
+                        <ellipse cx="25" cy="75" rx="10" ry="3" fill="#1976D2" opacity="0.7" />
+                        <ellipse cx="25" cy="75" rx="3" ry="10" fill="#1976D2" opacity="0.7" />
+                    </g>
+                    <g class="propeller">
+                        <circle cx="75" cy="75" r="12" fill="#64B5F6" stroke="#1976D2" stroke-width="2" opacity="0.8" />
+                        <ellipse cx="75" cy="75" rx="10" ry="3" fill="#1976D2" opacity="0.7" />
+                        <ellipse cx="75" cy="75" rx="3" ry="10" fill="#1976D2" opacity="0.7" />
+                    </g>
+                    <line x1="35" y1="35" x2="25" y2="25" stroke="#333" stroke-width="3" />
+                    <line x1="65" y1="35" x2="75" y2="25" stroke="#333" stroke-width="3" />
+                    <line x1="35" y1="65" x2="25" y2="75" stroke="#333" stroke-width="3" />
+                    <line x1="65" y1="65" x2="75" y2="75" stroke="#333" stroke-width="3" />
+                    <!-- Centro/câmera piscando em vermelho -->
+                    <circle cx="50" cy="50" r="6" fill="#FF0000" stroke="#880000" stroke-width="1" class="blink" />
+                    <circle cx="50" cy="40" r="3" fill="#F44336" />
+                    <text x="50" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="white" stroke="#333" stroke-width="0.5" id="commanderText">PILOTO</text>
+                </svg>
+                <div style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); background: rgba(255, 255, 255, 0.9); padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; color: #333; border: 1px solid #ddd; white-space: nowrap;" id="commanderLabel">PILOTO</div>
+            </div>
+        </div>
+        <div class="mission-info" id="missionInfo">
+            <strong>📍 Trajetória:</strong> (0, 0) → (5, 3)
+        </div>
+        <div class="status-display" id="statusDisplay">
+            🟢 Drone na posição inicial - Pronto para decolar
+        </div>
+        <div class="controls">
+            <button class="btn secondary" id="prevBtn" onclick="moveToPrevious()" disabled>⏮️</button>
+            <button class="btn" id="playBtn" onclick="moveToNext()" disabled>▶️</button>
+            <button class="btn secondary" onclick="resetMovement()">🔄</button>
+            <button class="btn danger" onclick="newMission()">🏠</button>
+        </div>
+    </div>
+    <!-- Botão lateral direito para avançar -->
+    <button id="advanceButton" onclick="window.location.href='file:///C:/Users/rafa_/OneDrive/%C3%81rea%20de%20Trabalho/Curso/DEP/pdf.html'">Avançar</button>
+    <!-- Som do drone -->
+    <audio id="droneSound" src="https://actions.google.com/sounds/v1/vehicles/drone_fly_loop.ogg" loop muted></audio>
+    <script>
+        const planeSize = 600;
+        const gridSize = 30;
+        const center = planeSize / 2;
+        const maxCoord = 10;
+        let startCoords = { x: 0, y: 0 };
+        let endCoords = { x: 5, y: 3 };
+        let middleCoords = { x: 0, y: 0 };
+        let currentPhase = 'ready';
+        let currentPosition = 'start';
+        function createGrid() {
+            const plane = document.getElementById('cartesianPlane');
+            const existingLines = plane.querySelectorAll('.grid-line');
+            existingLines.forEach(line => line.remove());
+            for (let i = 0; i <= 20; i++) {
+                const line = document.createElement('div');
+                line.className = 'grid-line vertical';
+                line.style.left = i * gridSize + 'px';
+                plane.appendChild(line);
+            }
+            for (let i = 0; i <= 20; i++) {
+                const line = document.createElement('div');
+                line.className = 'grid-line horizontal';
+                line.style.top = i * gridSize + 'px';
+                plane.appendChild(line);
+            }
+        }
+        function createAxisNumbers() {
+            const plane = document.getElementById('cartesianPlane');
+            const existingNumbers = plane.querySelectorAll('.number-label');
+            existingNumbers.forEach((num) => num.remove());
+            for (let i = -maxCoord; i <= maxCoord; i++) {
+                if (i !== 0) {
+                    const label = document.createElement('div');
+                    label.className = 'number-label';
+                    label.textContent = i;
+                    label.style.left = center + i * gridSize - 6 + 'px';
+                    label.style.top = center + 8 + 'px';
+                    plane.appendChild(label);
+                }
+            }
+            for (let i = -maxCoord; i <= maxCoord; i++) {
+                if (i !== 0) {
+                    const label = document.createElement('div');
+                    label.className = 'number-label';
+                    label.textContent = -i;
+                    label.style.left = center + 8 + 'px';
+                    label.style.top = center + i * gridSize - 6 + 'px';
+                    plane.appendChild(label);
+                }
+            }
+            const origin = document.createElement('div');
+            origin.className = 'number-label';
+            origin.textContent = '0';
+            origin.style.left = center + 8 + 'px';
+            origin.style.top = center + 8 + 'px';
+            origin.style.fontWeight = 'bold';
+            plane.appendChild(origin);
+        }
+        function coordsToPixels(coords) {
+            return {
+                x: center + coords.x * gridSize,
+                y: center - coords.y * gridSize,
+            };
+        }
+        function positionElement(element, coords) {
+            const pixels = coordsToPixels(coords);
+            element.style.left = pixels.x + 'px';
+            element.style.top = pixels.y + 'px';
+        }
+        function createCoordinateLines(coords, className) {
+            const plane = document.getElementById('cartesianPlane');
+            const pixels = coordsToPixels(coords);
+            const verticalLine = document.createElement('div');
+            verticalLine.className = `coordinate-line vertical ${className}`;
+            verticalLine.style.left = pixels.x + 'px';
+            verticalLine.style.top = Math.min(pixels.y, center) + 'px';
+            verticalLine.style.height = Math.abs(pixels.y - center) + 'px';
+            plane.appendChild(verticalLine);
+            const horizontalLine = document.createElement('div');
+            horizontalLine.className = `coordinate-line horizontal ${className}`;
+            horizontalLine.style.left = Math.min(pixels.x, center) + 'px';
+            horizontalLine.style.top = pixels.y + 'px';
+            horizontalLine.style.width = Math.abs(pixels.x - center) + 'px';
+            plane.appendChild(horizontalLine);
+        }
+        function removeCoordinateLines() {
+            const plane = document.getElementById('cartesianPlane');
+            const existingLines = plane.querySelectorAll('.coordinate-line');
+            existingLines.forEach((line) => line.remove());
+        }
+        function setupTrajectory() {
+            middleCoords = {
+                x: (startCoords.x + endCoords.x) / 2,
+                y: (startCoords.y + endCoords.y) / 2,
+            };
+            removeCoordinateLines();
+            positionElement(document.getElementById('startPoint'), startCoords);
+            positionElement(document.getElementById('middlePoint'), middleCoords);
+            positionElement(document.getElementById('endPoint'), endCoords);
+            createCoordinateLines(startCoords, 'start-lines');
+            createCoordinateLines(middleCoords, 'middle-lines');
+            createCoordinateLines(endCoords, 'end-lines');
+            const startPixels = coordsToPixels(startCoords);
+            const endPixels = coordsToPixels(endCoords);
+            const deltaX = endPixels.x - startPixels.x;
+            const deltaY = endPixels.y - startPixels.y;
+            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            const angle = (Math.atan2(deltaY, deltaX) * 180) / Math.PI;
+            const trajectoryLine = document.getElementById('trajectoryLine');
+            trajectoryLine.style.left = startPixels.x + 'px';
+            trajectoryLine.style.top = startPixels.y + 'px';
+            trajectoryLine.style.width = distance + 'px';
+            trajectoryLine.style.transform = `rotate(${angle}deg)`;
+            positionElement(document.getElementById('drone'), startCoords);
+        }
+        function updateStatus(message) {
+            document.getElementById('statusDisplay').innerHTML = message;
+        }
+        function enableAudio() {
+            const sound = document.getElementById('droneSound');
+            sound.muted = false;
+        }
+        function playDroneSound() {
+            const sound = document.getElementById('droneSound');
+            sound.muted = false;
+            sound.currentTime = 0;
+            sound.play().catch(() => {
+                // tenta tocar silenciosamente para "desbloquear" o áudio
+                sound.muted = true;
+                sound.play();
+            });
+        }
+        function stopDroneSound() {
+            const sound = document.getElementById('droneSound');
+            sound.pause();
+            sound.currentTime = 0;
+        }
+        function startMission() {
+            enableAudio();
+            const commanderName = document.getElementById('commanderName').value.trim() || 'PILOTO';
+            startCoords.x = parseInt(document.getElementById('startX').value) || 0;
+            startCoords.y = parseInt(document.getElementById('startY').value) || 0;
+            endCoords.x = parseInt(document.getElementById('endX').value) || 5;
+            endCoords.y = parseInt(document.getElementById('endY').value) || 3;
+            if (
+                startCoords.x < -10 ||
+                startCoords.x > 10 ||
+                startCoords.y < -10 ||
+                startCoords.y > 10 ||
+                endCoords.x < -10 ||
+                endCoords.x > 10 ||
+                endCoords.y < -10 ||
+                endCoords.y > 10
+            ) {
+                alert('Por favor, insira coordenadas válidas entre -10 e 10!');
+                return;
+            }
+            document.getElementById('commanderText').textContent = commanderName.toUpperCase();
+            document.getElementById('commanderLabel').textContent = commanderName.toUpperCase();
+            document.getElementById('missionInfo').innerHTML = `<strong>👨‍✈️ Comandante:</strong> ${commanderName} | <strong>📍 Trajetória:</strong> (${startCoords.x}, ${startCoords.y}) → (${endCoords.x}, ${endCoords.y})`;
+            document.getElementById('configScreen').classList.remove('active');
+            document.getElementById('missionScreen').classList.add('active');
+            createGrid();
+            createAxisNumbers();
+            setupTrajectory();
+            currentPhase = 'at-start';
+            currentPosition = 'start';
+            updateControlButtons();
+            updateStatus('🟢 Drone na posição inicial - Use os botões para navegar');
+        }
+        function updateControlButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const playBtn = document.getElementById('playBtn');
+            prevBtn.disabled = currentPosition === 'start';
+            playBtn.disabled = currentPosition === 'end';
+            if (currentPosition === 'end') {
+                playBtn.innerHTML = '⏹️';
+            } else {
+                playBtn.innerHTML = '▶️';
+            }
+        }
+        function moveToNext() {
+            if (currentPosition === 'end') return;
+            const drone = document.getElementById('drone');
+            playDroneSound();
+            if (currentPosition === 'start') {
+                currentPosition = 'middle';
+                currentPhase = 'at-middle';
+                positionElement(drone, middleCoords);
+                updateStatus(`🟡 Drone no ponto médio (${middleCoords.x}, ${middleCoords.y})`);
+            } else if (currentPosition === 'middle') {
+                currentPosition = 'end';
+                currentPhase = 'at-end';
+                positionElement(drone, endCoords);
+                updateStatus(`🔴 Drone no destino final (${endCoords.x}, ${endCoords.y}) - Missão concluída!`);
+            }
+            setTimeout(stopDroneSound, 2000);
+            updateControlButtons();
+        }
+        function moveToPrevious() {
+            if (currentPosition === 'start') return;
+            const drone = document.getElementById('drone');
+            playDroneSound();
+            if (currentPosition === 'end') {
+                currentPosition = 'middle';
+                currentPhase = 'at-middle';
+                positionElement(drone, middleCoords);
+                updateStatus(`🟡 Drone no ponto médio (${middleCoords.x}, ${middleCoords.y})`);
+            } else if (currentPosition === 'middle') {
+                currentPosition = 'start';
+                currentPhase = 'at-start';
+                positionElement(drone, startCoords);
+                updateStatus(`🟢 Drone na posição inicial (${startCoords.x}, ${startCoords.y})`);
+            }
+            setTimeout(stopDroneSound, 2000);
+            updateControlButtons();
+        }
+        function resetMovement() {
+            currentPhase = 'at-start';
+            currentPosition = 'start';
+            const drone = document.getElementById('drone');
+            positionElement(drone, startCoords);
+            updateControlButtons();
+            updateStatus(`🟢 Drone na posição inicial (${startCoords.x}, ${startCoords.y}) - Use os botões para navegar`);
+        }
+        function newMission() {
+            document.getElementById('missionScreen').classList.remove('active');
+            document.getElementById('configScreen').classList.add('active');
+            currentPhase = 'ready';
+            currentPosition = 'start';
+        }
+        function init() {
+            // Configuração inicial já está na tela
+        }
+        init();
+    </script>
+</body>
+</html>
