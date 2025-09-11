@@ -64,15 +64,15 @@
     <script>
         document.getElementById('btnVerAtividade').addEventListener('click', function() {
             const iframe = document.getElementById('pdfViewer');
-            iframe.src = 'file:///C:/Users/rafa_/OneDrive/Área%20de%20Trabalho/Curso/DEP/SABEBRASIL.pdf';
+            iframe.src = './SABEBRASIL.pdf';  // caminho relativo para o PDF no GitHub
             iframe.style.display = 'block';
             iframe.scrollIntoView({behavior: 'smooth'});
         });
         document.getElementById('btnVoltar').addEventListener('click', function() {
-            window.location.href = 'file:///C:/Users/rafa_/OneDrive/Área%20de%20Trabalho/Curso/DEP/droneaudio.html';
+            window.location.href = './droneaudio.html';  // ajuste para caminho relativo
         });
         document.getElementById('btnAvancar').addEventListener('click', function() {
-            window.location.href = 'file:///C:/Users/rafa_/OneDrive/Área%20de%20Trabalho/Curso/DEP/telafinal.html';
+            window.location.href = './telafinal.html';  // ajuste para caminho relativo
         });
     </script>
 </body>
