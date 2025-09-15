@@ -26,19 +26,19 @@
             transition: background-color 0.3s ease;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             color: white;
-            background: #4a90e2; /* azul harmônico */
+            background: #4a90e2;
         }
         button:hover {
-            background: #357ABD; /* azul mais escuro no hover */
+            background: #357ABD;
         }
         #btnVoltar {
-            background: #3366cc; /* azul harmônico mais escuro */
+            background: #3366cc;
         }
         #btnVoltar:hover {
             background: #254b8f;
         }
         #btnAvancar {
-            background: #5aade6; /* azul claro harmônico */
+            background: #5aade6;
         }
         #btnAvancar:hover {
             background: #3b8edc;
@@ -64,15 +64,15 @@
     <script>
         document.getElementById('btnVerAtividade').addEventListener('click', function() {
             const iframe = document.getElementById('pdfViewer');
-            iframe.src = './SABEBRASIL.pdf';  // caminho relativo para o PDF no GitHub
+            iframe.src = './SABEBRASIL.pdf'; // Ou coloque o link direto (raw) de um PDF público do GitHub, se preferir.
             iframe.style.display = 'block';
             iframe.scrollIntoView({behavior: 'smooth'});
         });
         document.getElementById('btnVoltar').addEventListener('click', function() {
-            window.location.href = './droneaudio.html';  // ajuste para caminho relativo
+            window.location.href = './droneaudio.html';
         });
         document.getElementById('btnAvancar').addEventListener('click', function() {
-            window.location.href = './telafinal.html';  // ajuste para caminho relativo
+            window.location.href = './telafinal.html';
         });
     </script>
 </body>
